@@ -72,6 +72,11 @@ public class HSSProject extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+    @Override
+    public void stop(){
+        TreeViewController.saveCurrentTreeView();
+    }
 
     /**
      * @param args the command line arguments

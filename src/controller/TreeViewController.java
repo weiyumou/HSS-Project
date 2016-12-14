@@ -9,10 +9,20 @@ import javafx.scene.control.TreeItem;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.SAXException;
 import view.HSSProject;
 /**
@@ -21,6 +31,7 @@ import view.HSSProject;
  */
 public class TreeViewController {
     public static final String TRIGGER_STRING = "添加...";
+    private static final String PATH = "src/xml/errorType.xml";
     
     private static TreeItem<String> constructTree(TreeItem<String> treeItemRoot, 
             Node xmlRoot){
@@ -46,7 +57,7 @@ public class TreeViewController {
         TreeItem<String> treeItemRoot = new TreeItem<>();
         
         try {
-            File inputFile = new File("src/xml/errorType.xml");
+            File inputFile = new File(PATH);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
@@ -81,5 +92,56 @@ public class TreeViewController {
         TreeView<String> errorTreeView = HSSProject.getErrorTreeView();
         TreeItem<String> currNode = errorTreeView.getSelectionModel().getSelectedItem();
         currNode.getParent().getChildren().add(new TreeItem<>(TRIGGER_STRING));
+    }
+    
+    private static void deconstructTree(TreeItem<String> treeItemRoot, 
+            XMLStreamWriter xMLStreamWriter, int depth) throws XMLStreamException{
+        
+        switch (depth) {
+            case 0:
+                xMLStreamWriter.writeStartElement("ErrorType");
+                break;
+            case 1:
+                xMLStreamWriter.writeStartElement("TypeI");
+                break;
+            case 2:
+                xMLStreamWriter.writeStartElement("TypeII");
+                break;
+            case 3:
+                xMLStreamWriter.writeStartElement("TypeIII");
+                break;
+            default:
+                break;
+        }
+        xMLStreamWriter.writeAttribute("name", treeItemRoot.getValue());
+        ObservableList<TreeItem<String>> children = treeItemRoot.getChildren();
+        for(int i = 0; i != children.size(); ++i){
+            deconstructTree(children.get(i), xMLStreamWriter, depth + 1);
+        }
+        xMLStreamWriter.writeEndElement();
+    }
+    
+    
+    public static void saveCurrentTreeView(){
+        TreeView<String> errorTreeView = HSSProject.getErrorTreeView();
+        TreeItem<String> treeItemRoot = errorTreeView.getRoot();
+        String xmlString;
+        try (StringWriter stringWriter = new StringWriter()) {
+            XMLOutputFactory xMLOutputFactory = XMLOutputFactory.newInstance();
+            XMLStreamWriter xMLStreamWriter = xMLOutputFactory.createXMLStreamWriter(stringWriter);
+            xMLStreamWriter.writeStartDocument();
+
+            deconstructTree(treeItemRoot, xMLStreamWriter, 0);
+            xMLStreamWriter.writeEndDocument();
+            xMLStreamWriter.flush();
+            xMLStreamWriter.close();
+            xmlString = stringWriter.getBuffer().toString();
+            
+            List<String> lines = Arrays.asList(xmlString);
+            Path file = Paths.get(PATH);
+            Files.write(file, lines, Charset.forName("UTF-8"));
+        }catch (XMLStreamException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
