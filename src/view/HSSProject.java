@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hssproject;
+package view;
 
+import controller.TreeViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -75,7 +77,7 @@ public class HSSProject extends Application {
         launch(args);
     }
     
-    private TableView<Mark> initialiseTableView(){
+    private Node initialiseTableView(){
         final int numOfCol = 9;
         
         TableView<Mark> table = new TableView<>();
@@ -126,149 +128,62 @@ public class HSSProject extends Application {
         return table;
     }
     
-    
-    private Parent initialiseUI(){
-        
-        BorderPane rootPane = new BorderPane();
-        
-//        GridPane rootPane = new GridPane();
-//        ColumnConstraints column1 = new ColumnConstraints();
-//        column1.setPercentWidth(50);
-//        ColumnConstraints column2 = new ColumnConstraints();
-//        column2.setPercentWidth(50);
-//        rootPane.getColumnConstraints().addAll(column1, column2);
-        
-//        for(int i = 0; i != 4; ++i){
-//            RowConstraints row = new RowConstraints();
-//            row.setPercentHeight(25);
-//            rootPane.getRowConstraints().add(row);
-//        }
-        
+    private Node initialiseMenuBar(){
         MenuBar menuBar = new MenuBar();
-        Menu menuFile = new Menu("File");
-        Menu menuAbout = new Menu("Aboout");
+        Menu menuFile = new Menu("文件");
+        Menu menuAbout = new Menu("关于");
         menuBar.getMenus().addAll(menuFile, menuAbout);
-        
-        rootPane.setTop(menuBar);
-        
+        return menuBar;
+    }
+    
+    private Node intialiseCentre(){
         GridPane centerPane = new GridPane();
         
         ColumnConstraints col1 = new ColumnConstraints();
-        col1.setPercentWidth(75);
+        col1.setPercentWidth(70);
         ColumnConstraints col2 = new ColumnConstraints();
-        col2.setPercentWidth(25);
+        col2.setPercentWidth(30);
         centerPane.getColumnConstraints().add(col1);
         centerPane.getColumnConstraints().add(col2);
         
         for(int i = 0; i != 3; ++i){
-            
             RowConstraints row = new RowConstraints();
             row.setPercentHeight(100/3.0);
             centerPane.getRowConstraints().add(row);
-            
         }
         
-        TextArea passagePrev = new TextArea();
-        TextArea passageCurr = new TextArea();
-        TextArea passageNext = new TextArea();
-        passagePrev.setOpacity(0.5);
-        passageNext.setOpacity(0.5);
+        TextArea prevEssay = new TextArea();
+        TextArea currEssay = new TextArea();
+        TextArea nextEssay = new TextArea();
+        prevEssay.setOpacity(0.5);
+        prevEssay.setEditable(false);
+        nextEssay.setOpacity(0.5);
+        nextEssay.setEditable(false);
         
+        currEssay.requestFocus();
         
-        centerPane.add(passagePrev, 0, 0, 1, 1);
-        centerPane.add(passageCurr, 0, 1, 1, 1);
-        centerPane.add(passageNext, 0, 2, 1, 1);
+        centerPane.add(prevEssay, 0, 0, 1, 1);
+        centerPane.add(currEssay, 0, 1, 1, 1);
+        centerPane.add(nextEssay, 0, 2, 1, 1);
 
-        
-        TreeItem<String> errorRootItem = new TreeItem<> ("Inbox");
-        errorRootItem.setExpanded(true);
-        for (int i = 1; i < 6; i++) {
-            TreeItem<String> item = new TreeItem<> ("Message" + i);            
-            errorRootItem.getChildren().add(item);
-        }
-        
+        TreeItem<String> errorRootItem = TreeViewController.buildTreeView();
         TreeView<String> errorTree = new TreeView<>(errorRootItem);
         centerPane.add(errorTree, 1, 0, 1, 3);
         
-        rootPane.setCenter(centerPane);
+        return centerPane;
+    }
+    
+    
+    private Parent initialiseUI(){
         
-        
-        
-        
+        BorderPane rootPane = new BorderPane();
+
+        rootPane.setTop(initialiseMenuBar());
+
+        rootPane.setCenter(intialiseCentre());
+
         rootPane.setBottom(initialiseTableView());
-            
-        
-        
-//        private final SimpleStringProperty authorID;
-//    private final SimpleStringProperty idInEssay;
-//    private final SimpleStringProperty idInParagraph;
-//    private final SimpleStringProperty sentenceContent;
-//    private final SimpleStringProperty typeIError;
-//    private final SimpleStringProperty typeIIError;
-//    private final SimpleStringProperty typeIIIError;
-//    private final SimpleStringProperty errorSegment;
-//    private final SimpleStringProperty remark;
-//        
-//        
-//        MenuBar menuBar = new MenuBar();
-//        Menu menuFile = new Menu("File");
-//        Menu menuAbout = new Menu("Aboout");
-//        menuBar.getMenus().addAll(menuFile, menuAbout);
-//        
-//        rootPane.setTop(menuBar);
-//        
-//        GridPane centerPane = new GridPane();
-//        rootPane.setCenter(centerPane);
-//        
-////        VBox textareaPane = new VBox();
-//        
-//        
-//        TextArea passagePrev = new TextArea();
-//        TextArea passageCurr = new TextArea();
-//        TextArea passageNext = new TextArea();
-//        passagePrev.setOpacity(0.5);
-//        passageNext.setOpacity(0.5);
-//        
-//        HBox passagePrevHBox = new HBox();
-//        passagePrevHBox.getChildren().add(passagePrev);
-//        HBox passageCurrHBox = new HBox();
-//        passageCurrHBox.getChildren().add(passageCurr);
-//        HBox passageNextHBox = new HBox();
-//        passageNextHBox.getChildren().add(passageNext);
-//        
-//        GridPane.setConstraints(passagePrevHBox, 0, 0);
-//        GridPane.setConstraints(passageCurrHBox, 0, 1);
-//        GridPane.setConstraints(passageNextHBox, 0, 2);
-//        
-////        textareaPane.getChildren().addAll(passagePrev, passageCurr, passageNext);
-//        
-////        rootPane.setCenter(textareaPane);
-//        
-//        VBox errorPane = new VBox();
-//        
-//        
-//        
-        
-//        GridPane.setConstraints(errorPane, 1, 0, 1, 3);
-          
-        
-//        rootPane.setRight(errorPane);
-//        GridPane gridpane = new GridPane();
-        
-//        borderPane.setCenter(gridpane);
-        
-//        GridPane.setConstraints(menuBox, 0, 0);
-        
-//        gridpane.getChildren().add(menuBox);
-        
-//        Button btn = new Button();
-//        btn.setText("Say 'Hello World'");
-//        btn.setOnAction((ActionEvent event) -> {
-//            System.out.println("Hello World!");
-//        });
-        
-//        StackPane root = new StackPane();
-//        root.getChildren().add(btn);
+
         return rootPane;
     }
 }

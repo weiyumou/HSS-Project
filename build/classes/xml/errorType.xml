@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ErrorType name="错误类型">
+	<typeI name="标点">
+		<typeII name="标点错误"></typeII>
+		<typeII name="标点空缺"></typeII>
+                <typeII name="标点多余"></typeII>
+                <typeII name="其他"></typeII>
+	</typeI>
+        <typeI name="字">
+		<typeII name="错字"></typeII>
+		<typeII name="别字"></typeII>
+                <typeII name="漏字"></typeII>
+                <typeII name="多字"></typeII>
+                <typeII name="简繁体字混淆"></typeII>
+                <typeII name="异体字"></typeII>
+                <typeII name="拼音字"></typeII>
+                <typeII name="无法识别的字"></typeII>
+                <typeII name="其他"></typeII>
+	</typeI>
+        <typeI name="词">
+		<typeII name="错词"></typeII>
+		<typeII name="离合词错误"></typeII>
+                <typeII name="缺词"></typeII>
+                <typeII name="多词"></typeII>
+                <typeII name="其他"></typeII>
+	</typeI>
+	<typeI name="句">
+            <typeII name="病句">
+                <typeIII name="把字句"></typeIII>
+                <typeIII name="被字句"></typeIII>
+                <typeIII name="比较句"></typeIII>
+                <typeIII name="连字句"></typeIII>
+                <typeIII name="有字句"></typeIII>
+                <typeIII name="是字句"></typeIII>
+                <typeIII name="存现句"></typeIII>
+                <typeIII name="兼语句"></typeIII>
+                <typeIII name="连动句"></typeIII>
+                <typeIII name="双宾句"></typeIII>
+                <typeIII name="其他"></typeIII>
+            </typeII>
+            <typeII name="句子成分残缺">
+                <typeIII name="主语残缺"></typeIII>
+                <typeIII name="谓语残缺"></typeIII>
+                <typeIII name="述语残缺"></typeIII>
+                <typeIII name="宾语残缺"></typeIII>
+                <typeIII name="补语残缺"></typeIII>
+                <typeIII name="定语残缺"></typeIII>
+                <typeIII name="状语残缺"></typeIII>
+                <typeIII name="中心语残缺"></typeIII>
+                <typeIII name="其他"></typeIII>
+            </typeII>
+            <typeII name="句子成分多余">
+                <typeIII name="主语多余"></typeIII>
+                <typeIII name="谓语多余"></typeIII>
+                <typeIII name="述语多余"></typeIII>
+                <typeIII name="宾语多余"></typeIII>
+                <typeIII name="补语多余"></typeIII>
+                <typeIII name="定语多余"></typeIII>
+                <typeIII name="状语多余"></typeIII>
+                <typeIII name="中心语多余"></typeIII>
+                <typeIII name="其他"></typeIII>
+            </typeII>
+            <typeII name="语序错误"></typeII>
+            <typeII name="句子杂糅"></typeII>
+            <typeII name="重叠错误"></typeII>
+            <typeII name="固定格式错误"></typeII>
+            <typeII name="未完句"></typeII>
+            <typeII name="其他"></typeII>
+	</typeI>
+        <typeI name="篇章"></typeI>
+</ErrorType>

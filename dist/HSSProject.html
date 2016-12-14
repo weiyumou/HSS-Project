@@ -4,7 +4,7 @@
     function launchApplication(jnlpfile) {
         dtjava.launch(            {
                 url : 'HSSProject.jnlp',
-                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGpubHAgc3BlYz0iMS4wIiB4bWxuczpqZng9Imh0dHA6Ly9qYXZhZnguY29tIiBocmVmPSJIU1NQcm9qZWN0LmpubHAiPgogIDxpbmZvcm1hdGlvbj4KICAgIDx0aXRsZT5IU1NQcm9qZWN0PC90aXRsZT4KICAgIDx2ZW5kb3I+d2VpeXVtb3U8L3ZlbmRvcj4KICAgIDxkZXNjcmlwdGlvbj5udWxsPC9kZXNjcmlwdGlvbj4KICAgIDxvZmZsaW5lLWFsbG93ZWQvPgogIDwvaW5mb3JtYXRpb24+CiAgPHJlc291cmNlcz4KICAgIDxqMnNlIHZlcnNpb249IjEuNisiIGhyZWY9Imh0dHA6Ly9qYXZhLnN1bi5jb20vcHJvZHVjdHMvYXV0b2RsL2oyc2UiLz4KICAgIDxqYXIgaHJlZj0iSFNTUHJvamVjdC5qYXIiIHNpemU9Ijc3MzUiIGRvd25sb2FkPSJlYWdlciIgLz4KICA8L3Jlc291cmNlcz4KICA8YXBwbGV0LWRlc2MgIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBtYWluLWNsYXNzPSJjb20uamF2YWZ4Lm1haW4uTm9KYXZhRlhGYWxsYmFjayIgIG5hbWU9IkhTU1Byb2plY3QiID4KICAgIDxwYXJhbSBuYW1lPSJyZXF1aXJlZEZYVmVyc2lvbiIgdmFsdWU9IjguMCsiLz4KICA8L2FwcGxldC1kZXNjPgogIDxqZng6amF2YWZ4LWRlc2MgIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBtYWluLWNsYXNzPSJoc3Nwcm9qZWN0LkhTU1Byb2plY3QiICBuYW1lPSJIU1NQcm9qZWN0IiAvPgogIDx1cGRhdGUgY2hlY2s9ImFsd2F5cyIvPgo8L2pubHA+Cg=='
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGpubHAgc3BlYz0iMS4wIiB4bWxuczpqZng9Imh0dHA6Ly9qYXZhZnguY29tIiBocmVmPSJIU1NQcm9qZWN0LmpubHAiPgogIDxpbmZvcm1hdGlvbj4KICAgIDx0aXRsZT5IU1NQcm9qZWN0PC90aXRsZT4KICAgIDx2ZW5kb3I+d2VpeXVtb3U8L3ZlbmRvcj4KICAgIDxkZXNjcmlwdGlvbj5udWxsPC9kZXNjcmlwdGlvbj4KICAgIDxvZmZsaW5lLWFsbG93ZWQvPgogIDwvaW5mb3JtYXRpb24+CiAgPHJlc291cmNlcz4KICAgIDxqMnNlIHZlcnNpb249IjEuNisiIGhyZWY9Imh0dHA6Ly9qYXZhLnN1bi5jb20vcHJvZHVjdHMvYXV0b2RsL2oyc2UiLz4KICAgIDxqYXIgaHJlZj0iSFNTUHJvamVjdC5qYXIiIHNpemU9IjEwMDEzIiBkb3dubG9hZD0iZWFnZXIiIC8+CiAgPC9yZXNvdXJjZXM+CiAgPGFwcGxldC1kZXNjICB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgbWFpbi1jbGFzcz0iY29tLmphdmFmeC5tYWluLk5vSmF2YUZYRmFsbGJhY2siICBuYW1lPSJIU1NQcm9qZWN0IiA+CiAgICA8cGFyYW0gbmFtZT0icmVxdWlyZWRGWFZlcnNpb24iIHZhbHVlPSI4LjArIi8+CiAgPC9hcHBsZXQtZGVzYz4KICA8amZ4OmphdmFmeC1kZXNjICB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgbWFpbi1jbGFzcz0idmlldy5IU1NQcm9qZWN0IiAgbmFtZT0iSFNTUHJvamVjdCIgLz4KICA8dXBkYXRlIGNoZWNrPSJhbHdheXMiLz4KPC9qbmxwPgo='
             },
             {
                 javafx : '8.0+'
@@ -16,15 +16,15 @@
 </script>
 
 <script>
-    function javafxEmbedhssproject() {
+    function javafxEmbedview() {
         dtjava.embed(
             {
-                id : 'hssproject',
+                id : 'view',
                 url : 'HSSProject.jnlp',
                 placeholder : 'javafx-app-placeholder',
                 width : '800',
                 height : '600',
-                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGpubHAgc3BlYz0iMS4wIiB4bWxuczpqZng9Imh0dHA6Ly9qYXZhZnguY29tIiBocmVmPSJIU1NQcm9qZWN0LmpubHAiPgogIDxpbmZvcm1hdGlvbj4KICAgIDx0aXRsZT5IU1NQcm9qZWN0PC90aXRsZT4KICAgIDx2ZW5kb3I+d2VpeXVtb3U8L3ZlbmRvcj4KICAgIDxkZXNjcmlwdGlvbj5udWxsPC9kZXNjcmlwdGlvbj4KICAgIDxvZmZsaW5lLWFsbG93ZWQvPgogIDwvaW5mb3JtYXRpb24+CiAgPHJlc291cmNlcz4KICAgIDxqMnNlIHZlcnNpb249IjEuNisiIGhyZWY9Imh0dHA6Ly9qYXZhLnN1bi5jb20vcHJvZHVjdHMvYXV0b2RsL2oyc2UiLz4KICAgIDxqYXIgaHJlZj0iSFNTUHJvamVjdC5qYXIiIHNpemU9Ijc3MzUiIGRvd25sb2FkPSJlYWdlciIgLz4KICA8L3Jlc291cmNlcz4KICA8YXBwbGV0LWRlc2MgIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBtYWluLWNsYXNzPSJjb20uamF2YWZ4Lm1haW4uTm9KYXZhRlhGYWxsYmFjayIgIG5hbWU9IkhTU1Byb2plY3QiID4KICAgIDxwYXJhbSBuYW1lPSJyZXF1aXJlZEZYVmVyc2lvbiIgdmFsdWU9IjguMCsiLz4KICA8L2FwcGxldC1kZXNjPgogIDxqZng6amF2YWZ4LWRlc2MgIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBtYWluLWNsYXNzPSJoc3Nwcm9qZWN0LkhTU1Byb2plY3QiICBuYW1lPSJIU1NQcm9qZWN0IiAvPgogIDx1cGRhdGUgY2hlY2s9ImFsd2F5cyIvPgo8L2pubHA+Cg=='
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGpubHAgc3BlYz0iMS4wIiB4bWxuczpqZng9Imh0dHA6Ly9qYXZhZnguY29tIiBocmVmPSJIU1NQcm9qZWN0LmpubHAiPgogIDxpbmZvcm1hdGlvbj4KICAgIDx0aXRsZT5IU1NQcm9qZWN0PC90aXRsZT4KICAgIDx2ZW5kb3I+d2VpeXVtb3U8L3ZlbmRvcj4KICAgIDxkZXNjcmlwdGlvbj5udWxsPC9kZXNjcmlwdGlvbj4KICAgIDxvZmZsaW5lLWFsbG93ZWQvPgogIDwvaW5mb3JtYXRpb24+CiAgPHJlc291cmNlcz4KICAgIDxqMnNlIHZlcnNpb249IjEuNisiIGhyZWY9Imh0dHA6Ly9qYXZhLnN1bi5jb20vcHJvZHVjdHMvYXV0b2RsL2oyc2UiLz4KICAgIDxqYXIgaHJlZj0iSFNTUHJvamVjdC5qYXIiIHNpemU9IjEwMDEzIiBkb3dubG9hZD0iZWFnZXIiIC8+CiAgPC9yZXNvdXJjZXM+CiAgPGFwcGxldC1kZXNjICB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgbWFpbi1jbGFzcz0iY29tLmphdmFmeC5tYWluLk5vSmF2YUZYRmFsbGJhY2siICBuYW1lPSJIU1NQcm9qZWN0IiA+CiAgICA8cGFyYW0gbmFtZT0icmVxdWlyZWRGWFZlcnNpb24iIHZhbHVlPSI4LjArIi8+CiAgPC9hcHBsZXQtZGVzYz4KICA8amZ4OmphdmFmeC1kZXNjICB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgbWFpbi1jbGFzcz0idmlldy5IU1NQcm9qZWN0IiAgbmFtZT0iSFNTUHJvamVjdCIgLz4KICA8dXBkYXRlIGNoZWNrPSJhbHdheXMiLz4KPC9qbmxwPgo='
             },
             {
                 javafx : '8.0+'
@@ -33,7 +33,7 @@
         );
     }
     <!-- Embed FX application into web page once page is loaded -->
-    dtjava.addOnloadCallback(javafxEmbedhssproject);
+    dtjava.addOnloadCallback(javafxEmbedview);
 </script>
 
 </head><body>
