@@ -5,6 +5,7 @@
  */
 package view;
 
+import controller.TextAreaController;
 import controller.TreeViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -28,6 +29,7 @@ import javafx.stage.Stage;
 import model.Mark;
 import model.Sentence;
 import model.Error;
+import model.TextFieldTreeCellImpl;
 
 /**
  *
@@ -35,6 +37,7 @@ import model.Error;
  */
 public class HSSProject extends Application {
     
+    private static TreeView<String> errorTreeView;
     
     private final Sentence sentence = new Sentence("15", "3", "这一句话。");
     private final Error error = new Error("句", "句子成分残缺", 
@@ -160,15 +163,25 @@ public class HSSProject extends Application {
         nextEssay.setOpacity(0.5);
         nextEssay.setEditable(false);
         
+        prevEssay.setText("这里显示之前的句子。");
+        nextEssay.setText("这里显示之后的句子。");
+        currEssay.setText("这里显示正在处理的句子。");
+        
         currEssay.requestFocus();
+        
+        currEssay.focusedProperty().addListener(TextAreaController.getChangeListener());
         
         centerPane.add(prevEssay, 0, 0, 1, 1);
         centerPane.add(currEssay, 0, 1, 1, 1);
         centerPane.add(nextEssay, 0, 2, 1, 1);
 
         TreeItem<String> errorRootItem = TreeViewController.buildTreeView();
-        TreeView<String> errorTree = new TreeView<>(errorRootItem);
-        centerPane.add(errorTree, 1, 0, 1, 3);
+        errorTreeView = new TreeView<>(errorRootItem);
+        errorTreeView.setEditable(true);
+        errorTreeView.setCellFactory((TreeView<String> p) -> new TextFieldTreeCellImpl());
+        centerPane.add(errorTreeView, 1, 0, 1, 3);
+        
+        
         
         return centerPane;
     }
@@ -185,5 +198,9 @@ public class HSSProject extends Application {
         rootPane.setBottom(initialiseTableView());
 
         return rootPane;
+    }
+
+    public static TreeView<String> getErrorTreeView() {
+        return errorTreeView;
     }
 }
