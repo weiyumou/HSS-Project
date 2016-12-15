@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import model.Essay;
+import model.Sentence;
 import view.MainScreen;
 
 /**
@@ -28,6 +29,7 @@ public class TextAreaController {
     
     private static Essay currentEssay;
     private static int currentSentenceNo;
+    private static Sentence currentSentence;
     
     public static ChangeListener<Boolean> getChangeListener(){
         return (ObservableValue<? extends Boolean> arg0, 
@@ -91,8 +93,8 @@ public class TextAreaController {
     private static void displayEssay(){
         MainScreen.getPrevEssay().setText(currentEssay.getSegment(1, currentSentenceNo));
         MainScreen.getPrevEssay().setScrollTop(Double.MAX_VALUE);
-        MainScreen.getCurrEssay().setText(currentEssay.getAugmentedSegment
-            (currentSentenceNo, currentSentenceNo + 1));
+        currentSentence = currentEssay.getSingleSentence(currentSentenceNo);
+        MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
     }

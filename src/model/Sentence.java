@@ -38,7 +38,7 @@ public class Sentence {
 
     @Override
     public String toString() {
-        return "[" + idInEssay + ", " + idInParagraph + "] " + content;
+        return "[" + idInEssay + ", " + idInParagraph + "]" + content;
     }
 
     public void setContent(String content) {

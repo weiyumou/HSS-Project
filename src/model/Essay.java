@@ -73,10 +73,15 @@ public class Essay {
     }
     
     public String getSegment(int from, int to){
-        int count = 0;
-        String segment = "\t";
+        int count = 0, para_count = 0;
+        String segment = "";
         
         for(Paragraph para : paragraphs){
+            ++para_count;
+            String temp_before = segment;
+            segment += "\t[" + para_count + "]";
+            String temp_after = segment;
+            
             for(Sentence sentence : para.getSentences()){
                 ++count;
                 if(count >= from && count < to){
@@ -85,31 +90,30 @@ public class Essay {
                     return segment;
                 }
             }
-            if(!segment.equals("\t")){
-                segment += "\n\t";
-            }
+            if(segment.equals(temp_after)){
+                segment = temp_before;
+            }else{
+                segment += "\n";
+            }            
+        }
+        if(segment.equals("\t[1]")){
+            segment = "";
         }
         return segment;
     }
     
-    public String getAugmentedSegment(int from, int to){
+    public Sentence getSingleSentence(int index){
         int count = 0;
-        String segment = "\t";
         
         for(Paragraph para : paragraphs){
             for(Sentence sentence : para.getSentences()){
                 ++count;
-                if(count >= from && count < to){
-                    segment += sentence.toString();
-                }else if(count >= to){
-                    return segment;
+                if(count == index){
+                    return sentence;
                 }
             }
-            if(!segment.equals("\t")){
-                segment += "\n\t";
-            }
         }
-        return segment;
+        return null;
     }
 
     public int getNumOfSentences() {

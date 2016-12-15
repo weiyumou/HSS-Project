@@ -5,21 +5,15 @@
  */
 package view;
 
-import controller.LoginController;
 import controller.MainScreenController;
 import controller.TextAreaController;
 import controller.ToolbarController;
 import controller.TreeViewController;
-import java.io.File;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -39,8 +33,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Mark;
-import model.Sentence;
-import model.Error;
 import model.TextFieldTreeCellImpl;
 
 /**
@@ -51,7 +43,7 @@ public class MainScreen extends Application {
     
     private static FileChooser fileChooser;
     private static TreeView<String> errorTreeView;
-    private static TableView<Mark> table;
+    private static TableView<Mark> markTableView;
     private static TextArea prevEssay;
     private static TextArea currEssay;
     private static TextArea nextEssay;
@@ -62,25 +54,25 @@ public class MainScreen extends Application {
     private static Label titleLabel;
     private static Label authorIDLabel;
     
-    private static final Sentence sentence = new Sentence("15", "3", "这一句话。");
-    private static final Error error = new Error("句", "句子成分残缺", 
-            "谓语残缺", "这一句话。", "缺少\"是\"");
-    
-    private static final Mark mark = new Mark("1", sentence, error);
-    
-    private static final ObservableList<Mark> data =
-        FXCollections.observableArrayList(
-            new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error),
-                new Mark("1", sentence, error)
-        );
+//    private static final Sentence sentence = new Sentence("15", "3", "这一句话。");
+//    private static final Error error = new Error("句", "句子成分残缺", 
+//            "谓语残缺", "这一句话。", "缺少\"是\"");
+//    
+//    private static final Mark mark = new Mark("1", sentence, error);
+//    
+//    private static final ObservableList<Mark> data =
+//        FXCollections.observableArrayList(
+//            new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error),
+//                new Mark("1", sentence, error)
+//        );
     
     @Override
     public void start(Stage primaryStage) {
@@ -102,52 +94,52 @@ public class MainScreen extends Application {
     private static Node initialiseTableView(){
         final int numOfCol = 9;
         
-        table = new TableView<>();
+        markTableView = new TableView<>();
         
         TableColumn authorIDCol = new TableColumn("作者序号");
-        authorIDCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol * 2));
+        authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
         authorIDCol.setCellValueFactory(new PropertyValueFactory<>("authorID"));
  
         TableColumn idInEssayCol = new TableColumn("句子序号");
-        idInEssayCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol * 2));
+        idInEssayCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
         idInEssayCol.setCellValueFactory(new PropertyValueFactory<>("idInEssay"));
  
         TableColumn idInParaCol = new TableColumn("句子在段落中序号");
-        idInParaCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol));
+        idInParaCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         idInParaCol.setCellValueFactory(new PropertyValueFactory<>("idInParagraph"));
         
         TableColumn contentCol = new TableColumn("句子");
-        contentCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol));
+        contentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         contentCol.setCellValueFactory(new PropertyValueFactory<>("sentenceContent"));
         
         TableColumn typeIErrorCol = new TableColumn("错误类型");
-        typeIErrorCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol));
+        typeIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIError"));
         
         TableColumn typeIIErrorCol = new TableColumn("具体错误类型");
-        typeIIErrorCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol));
+        typeIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIError"));
         
         TableColumn typeIIIErrorCol = new TableColumn("病句及句子成分错误类型");
-        typeIIIErrorCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol));
+        typeIIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIIError"));
  
         TableColumn errorSegmentCol = new TableColumn("错误所在片段");
-        errorSegmentCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol));
+        errorSegmentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         errorSegmentCol.setCellValueFactory(new PropertyValueFactory<>("errorSegment"));
         
         TableColumn remarkCol = new TableColumn("备注");
-        remarkCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol / 2.0));
+        remarkCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol / 2.0));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
         
-        table.setItems(data);
-        table.getColumns().addAll(authorIDCol, idInEssayCol, idInParaCol,
+//        markTableView.setItems(data);
+        markTableView.getColumns().addAll(authorIDCol, idInEssayCol, idInParaCol,
             contentCol, typeIErrorCol, typeIIErrorCol, typeIIIErrorCol,
             errorSegmentCol, remarkCol);
         
-        table.setPrefHeight(200);
+        markTableView.setPrefHeight(200);
         
-        return table;
+        return markTableView;
     }
     
     private static Node initialiseToolBar(){
@@ -339,6 +331,10 @@ public class MainScreen extends Application {
     }
     public static void clearAuthorID() {
         authorIDLabel.setText("");
+    }
+
+    public static TableView<Mark> getMarkTableView() {
+        return markTableView;
     }
     
     

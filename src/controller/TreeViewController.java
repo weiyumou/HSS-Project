@@ -82,7 +82,8 @@ public class TreeViewController {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 1){
                     System.out.println("Single clicked");
-//                    clearSelections();
+                    
+                    
                 }
             }
         };
