@@ -59,6 +59,8 @@ public class MainScreen extends Application {
     private static Label usernameLabel;
     private static Label usercategoryLabel;
     private static Button authorinfoButton;
+    private static Label titleLabel;
+    private static Label authorIDLabel;
     
     private static final Sentence sentence = new Sentence("15", "3", "这一句话。");
     private static final Error error = new Error("句", "句子成分残缺", 
@@ -170,11 +172,13 @@ public class MainScreen extends Application {
         
         usernameLabel = new Label("当前用户: ");
         usercategoryLabel = new Label("类别: ");
+        
 //        final Button right2 = new Button( "right2 button" );
 //        final Button right3 = new Button( "right3 button" );
         
-        final Label titleLabel = new Label("当前文章: ");
-        final Label authorIDLabel = new Label("作者序号: ");
+        titleLabel = new Label("当前文章: ");
+        authorIDLabel = new Label("作者序号: ");
+        ToolbarController.resetEssayDisplay();
         
         authorinfoButton = new Button("查看作者信息");
         authorinfoButton.setVisible(false);
@@ -317,4 +321,20 @@ public class MainScreen extends Application {
     public static Button getAuthorinfoButton() {
         return authorinfoButton;
     }
+
+    public static void clearEssayTitle() {
+        titleLabel.setText("");
+    }
+    public static void setEssayTitle(String title) {
+        titleLabel.setText(titleLabel.getText() + title);
+    }
+
+    public static void setAuthorID(String authorID) {
+        authorIDLabel.setText(authorIDLabel.getText() + authorID);
+    }
+    public static void clearAuthorID() {
+        authorIDLabel.setText("");
+    }
+    
+    
 }

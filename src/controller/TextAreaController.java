@@ -9,14 +9,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import model.Essay;
-import model.Paragraph;
-import model.Sentence;
 import view.MainScreen;
 
 /**
@@ -42,6 +39,9 @@ public class TextAreaController {
         try(BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
             lines = br.lines().collect(Collectors.toList());
             currentEssay = new Essay(lines);
+            ToolbarController.adjustEssayDisplay(currentEssay.getTitle(), 
+                currentEssay.getAuthorID());
+            MainScreenController.enableViewAuthorInfo();
             displayEssay();
         }catch (IOException e) {
             e.printStackTrace();

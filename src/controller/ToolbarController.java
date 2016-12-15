@@ -31,4 +31,17 @@ public class ToolbarController {
             MainScreen.getAuthorinfoButton().setVisible(true);
         }
     }
+    
+    public static void adjustEssayDisplay(String title, String author){
+        resetEssayDisplay();
+        MainScreen.setEssayTitle(title);
+        MainScreen.setAuthorID(author);
+    }
+    
+    public static void resetEssayDisplay(){
+        MainScreen.clearEssayTitle();
+        MainScreen.clearAuthorID();
+        MainScreen.setEssayTitle("当前文章: ");
+        MainScreen.setAuthorID("作者序号: ");
+    }
 }

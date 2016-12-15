@@ -20,6 +20,8 @@ import view.MainScreen;
 public class MainScreenController {
     
     private static Stage currentStage;
+    private static String user;
+    private static String userType;
     
     public static void login(){
         LoginController.showLoginScreen();
@@ -36,6 +38,8 @@ public class MainScreenController {
     }
     
     public static void showMainScreen(String user, String userType){
+        MainScreenController.user = user;
+        MainScreenController.userType = userType;
         currentStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         configureFileChooser(fileChooser);
@@ -64,5 +68,19 @@ public class MainScreenController {
     
     public static File showFileChooser() {
         return MainScreen.getFileChooser().showOpenDialog(currentStage);
+    }
+
+    public static String getUser() {
+        return user;
+    }
+
+    public static String getUserType() {
+        return userType;
+    }
+    
+    public static void enableViewAuthorInfo(){
+        if(userType.equals("管理员")){
+            MainScreen.getAuthorinfoButton().setDisable(false);
+        }
     }
 }
