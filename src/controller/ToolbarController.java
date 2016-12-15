@@ -8,7 +8,6 @@ package controller;
 import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.stage.FileChooser;
 import view.MainScreen;
 
 /**
@@ -18,15 +17,18 @@ import view.MainScreen;
 public class ToolbarController {
     public static EventHandler<ActionEvent> openFileEventHandler(){
         return (ActionEvent event) -> {
-            File file = MainScreen.showFileChooser();
+            File file = MainScreenController.showFileChooser();
             if (file != null) {
                 TextAreaController.readEssay(file.getPath());
             }
         };
     }
     
-    public static void adjustDisplay(String user, String userType){
+    public static void adjustUserDisplay(String user, String userType){
         MainScreen.setUsernameLabel(user);
         MainScreen.setUsercategoryLabel(userType);
+        if(userType.equals("管理员")){
+            MainScreen.getAuthorinfoButton().setVisible(true);
+        }
     }
 }

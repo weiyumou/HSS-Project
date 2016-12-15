@@ -6,6 +6,7 @@
 package view;
 
 import controller.LoginController;
+import controller.MainScreenController;
 import controller.TextAreaController;
 import controller.ToolbarController;
 import controller.TreeViewController;
@@ -13,6 +14,7 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -47,10 +49,7 @@ import model.TextFieldTreeCellImpl;
  */
 public class MainScreen extends Application {
     
-    private static Stage currentStage;
-    
     private static FileChooser fileChooser;
-    
     private static TreeView<String> errorTreeView;
     private static TableView<Mark> table;
     private static TextArea prevEssay;
@@ -59,6 +58,7 @@ public class MainScreen extends Application {
     
     private static Label usernameLabel;
     private static Label usercategoryLabel;
+    private static Button authorinfoButton;
     
     private static final Sentence sentence = new Sentence("15", "3", "这一句话。");
     private static final Error error = new Error("句", "句子成分残缺", 
@@ -82,27 +82,12 @@ public class MainScreen extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        
-        currentStage = primaryStage;
-        
-        LoginController.showLoginScreen();
-
-//        Parent root = initialiseUI();
-
-//        Scene scene = new Scene(root, 1280, 720);
-//        
-////        TextAreaController.readEssay("src/essay/童年的杨柳叶.txt");
-//        
-//        primaryStage.setTitle("作文标注");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+        MainScreenController.login();
     }
     
     @Override
     public void stop(){
-        if(errorTreeView != null){
-            TreeViewController.saveCurrentTreeView();
-        }
+        MainScreenController.applicationClose();
     }
 
     /**
@@ -111,9 +96,7 @@ public class MainScreen extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
-    
+
     private static Node initialiseTableView(){
         final int numOfCol = 9;
         
@@ -165,7 +148,7 @@ public class MainScreen extends Application {
         return table;
     }
     
-    private static Node initialiseMenuBar(){
+    private static Node initialiseToolBar(){
         final Button openButton = new Button("打开");
         openButton.setGraphic(new ImageView("file:src/img/glyphicons-145-folder-open.png"));
         openButton.setPrefWidth(80);
@@ -183,6 +166,7 @@ public class MainScreen extends Application {
 
         final Button logoutButton = new Button();
         logoutButton.setGraphic(new ImageView("file:src/img/glyphicons-388-log-out.png"));
+        logoutButton.setOnAction(MainScreenController.getLogoutEventHandler());
         
         usernameLabel = new Label("当前用户: ");
         usercategoryLabel = new Label("类别: ");
@@ -192,7 +176,9 @@ public class MainScreen extends Application {
         final Label titleLabel = new Label("当前文章: ");
         final Label authorIDLabel = new Label("作者序号: ");
         
-        final Button authorinfoButton = new Button("查看作者信息");
+        authorinfoButton = new Button("查看作者信息");
+        authorinfoButton.setVisible(false);
+        authorinfoButton.setDisable(true);
 //        final Button center1 = new Button( "center1 button" );
 
     /*
@@ -283,7 +269,7 @@ public class MainScreen extends Application {
         
         BorderPane rootPane = new BorderPane();
 
-        rootPane.setTop(initialiseMenuBar());
+        rootPane.setTop(initialiseToolBar());
 
         rootPane.setCenter(intialiseCentre());
 
@@ -308,14 +294,6 @@ public class MainScreen extends Application {
         return nextEssay;
     }
 
-    public static File showFileChooser() {
-        return fileChooser.showOpenDialog(currentStage);
-    }
-
-    public static Stage getCurrentStage() {
-        return currentStage;
-    }
-
     public static FileChooser getFileChooser() {
         return fileChooser;
     }
@@ -334,5 +312,9 @@ public class MainScreen extends Application {
 
     public static void setUsercategoryLabel(String userType) {
         usercategoryLabel.setText(usercategoryLabel.getText() + userType);
+    }
+
+    public static Button getAuthorinfoButton() {
+        return authorinfoButton;
     }
 }

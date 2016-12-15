@@ -124,6 +124,9 @@ public class TreeViewController {
     
     public static void saveCurrentTreeView(){
         TreeView<String> errorTreeView = MainScreen.getErrorTreeView();
+        if(errorTreeView == null){
+            return;
+        }
         TreeItem<String> treeItemRoot = errorTreeView.getRoot();
         String xmlString;
         try (StringWriter stringWriter = new StringWriter()) {
