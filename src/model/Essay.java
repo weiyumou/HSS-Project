@@ -16,17 +16,18 @@ public class Essay {
     private String title;
     private String authorID;
     private List<Paragraph> paragraphs;
+    private int numOfSentences;
 
     public Essay(List<String> lines) {
         this.title = lines.get(0);
         this.authorID = lines.get(1);
         
         this.paragraphs = new ArrayList<>();
-        int numPrecSentences = 0;
+        numOfSentences = 0;
         for(int i = 2; i != lines.size(); ++i){
-            Paragraph para = new Paragraph(lines.get(i), numPrecSentences);
+            Paragraph para = new Paragraph(lines.get(i), numOfSentences);
             this.paragraphs.add(para);
-            numPrecSentences += para.getSentences().size();
+            numOfSentences += para.getSentences().size();
         }
     }
 
@@ -66,4 +67,54 @@ public class Essay {
         
         return res;
     }
+    
+    public String getSegment(int from){
+        return getSegment(from, numOfSentences + 1);
+    }
+    
+    public String getSegment(int from, int to){
+        int count = 0;
+        String segment = "\t";
+        
+        for(Paragraph para : paragraphs){
+            for(Sentence sentence : para.getSentences()){
+                ++count;
+                if(count >= from && count < to){
+                    segment += sentence.getContent();
+                }else if(count >= to){
+                    return segment;
+                }
+            }
+            if(!segment.equals("\t")){
+                segment += "\n\t";
+            }
+        }
+        return segment;
+    }
+    
+    public String getAugmentedSegment(int from, int to){
+        int count = 0;
+        String segment = "\t";
+        
+        for(Paragraph para : paragraphs){
+            for(Sentence sentence : para.getSentences()){
+                ++count;
+                if(count >= from && count < to){
+                    segment += sentence.toString();
+                }else if(count >= to){
+                    return segment;
+                }
+            }
+            if(!segment.equals("\t")){
+                segment += "\n\t";
+            }
+        }
+        return segment;
+    }
+
+    public int getNumOfSentences() {
+        return numOfSentences;
+    }
+    
+    
 }

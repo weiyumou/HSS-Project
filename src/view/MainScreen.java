@@ -247,11 +247,16 @@ public class MainScreen extends Application {
         nextEssay.setOpacity(0.5);
         nextEssay.setEditable(false);
         
-        prevEssay.setText("这里显示之前的句子。");
-        nextEssay.setText("这里显示之后的句子。");
-        currEssay.setText("这里显示正在处理的句子。");
+//        prevEssay.setText("这里显示之前的句子。");
+//        nextEssay.setText("这里显示之后的句子。");
+//        currEssay.setText("这里显示正在处理的句子。");
         
-        currEssay.requestFocus();
+        prevEssay.setWrapText(true);
+        nextEssay.setWrapText(true);
+        currEssay.setWrapText(true);
+        
+        currEssay.setOnScroll(TextAreaController.getScrollEventHandler());
+        currEssay.setOnKeyReleased(TextAreaController.getScrollKeyEventHandler());
         
         currEssay.focusedProperty().addListener(TextAreaController.getChangeListener());
         

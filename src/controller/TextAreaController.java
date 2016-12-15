@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import model.Essay;
 import view.MainScreen;
 
@@ -23,6 +27,7 @@ import view.MainScreen;
 public class TextAreaController {
     
     private static Essay currentEssay;
+    private static int currentSentenceNo;
     
     public static ChangeListener<Boolean> getChangeListener(){
         return (ObservableValue<? extends Boolean> arg0, 
@@ -42,13 +47,53 @@ public class TextAreaController {
             ToolbarController.adjustEssayDisplay(currentEssay.getTitle(), 
                 currentEssay.getAuthorID());
             MainScreenController.enableViewAuthorInfo();
+            currentSentenceNo = 1;
             displayEssay();
         }catch (IOException e) {
             e.printStackTrace();
 	}
     }
+
+    public static EventHandler<ScrollEvent> getScrollEventHandler(){
+        return (ScrollEvent event) -> {
+            if(event.getDeltaY() < 0){ //up
+                scrollup();
+            }else if(event.getDeltaY() > 0){ //down
+                scrolldown();
+            }
+        };
+    }
+
+    public static EventHandler<KeyEvent> getScrollKeyEventHandler(){
+        return (KeyEvent event) -> {
+            if(event.getCode() == KeyCode.UP){
+                scrolldown();
+            }else if(event.getCode() == KeyCode.DOWN){
+                scrollup();
+            }
+        };
+    }
+    
+    private static void scrollup(){
+        if(currentSentenceNo < currentEssay.getNumOfSentences()){
+            ++currentSentenceNo;
+            displayEssay();
+        }
+    }
+    
+    private static void scrolldown(){
+       if(currentSentenceNo > 1){
+            --currentSentenceNo;
+            displayEssay();
+        }
+    }
     
     private static void displayEssay(){
-        MainScreen.getCurrEssay().setText(currentEssay.toString());
+        MainScreen.getPrevEssay().setText(currentEssay.getSegment(1, currentSentenceNo));
+        MainScreen.getPrevEssay().setScrollTop(Double.MAX_VALUE);
+        MainScreen.getCurrEssay().setText(currentEssay.getAugmentedSegment
+            (currentSentenceNo, currentSentenceNo + 1));
+        MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
+        MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
     }
 }
