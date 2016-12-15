@@ -6,6 +6,7 @@
 package model;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,23 +15,16 @@ import java.util.List;
  * @author weiyumou
  */
 public class Paragraph {
-    private int id;
     private String content;
     private List<Sentence> sentences;
+    private int numPrecedingSentences;
 
-    public Paragraph(int id, String content) {
-        this.id = id;
+    public Paragraph(String content, int numPrecedingSentences) {
         this.content = content;
+        this.numPrecedingSentences = numPrecedingSentences;
+        generateSentences();
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    
     public String getContent() {
         return content;
     }
@@ -46,10 +40,23 @@ public class Paragraph {
     public void setSentences(List<Sentence> sentences) {
         this.sentences = sentences;
     }
-    
-    
 
-    private List<Sentence> generateSentences(){
-        return new ArrayList<>();
+    private void generateSentences(){
+        sentences = new ArrayList<>();
+        int count = 0, prev = 0;
+        for(int i = 0; i != content.length(); ++i){
+            switch (content.charAt(i)) {
+                case '。':
+                case '！':
+                case '？':
+                    ++count;
+                    sentences.add(new Sentence(Integer.toString(numPrecedingSentences + count), 
+                        Integer.toString(count), content.substring(prev, i + 1)));
+                    prev = i + 1;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

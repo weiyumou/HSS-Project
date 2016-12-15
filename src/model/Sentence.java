@@ -36,15 +36,16 @@ public class Sentence {
         this.idInParagraph = idInParagraph;
     }
 
-    public String getContent() {
-        return content;
+    @Override
+    public String toString() {
+        return "[" + idInEssay + ", " + idInParagraph + "] " + content;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    
-    
-    
+    public String getContent() {
+        return content;
+    }
 }

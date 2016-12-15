@@ -6,25 +6,34 @@
 package view;
 
 import controller.TextAreaController;
+import controller.ToolbarController;
 import controller.TreeViewController;
+import java.io.File;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Mark;
 import model.Sentence;
@@ -37,7 +46,14 @@ import model.TextFieldTreeCellImpl;
  */
 public class HSSProject extends Application {
     
+    private static Stage currentStage;
+    
+    private static FileChooser fileChooser;
+    
     private static TreeView<String> errorTreeView;
+    private static TextArea prevEssay;
+    private static TextArea currEssay;
+    private static TextArea nextEssay;
     
     private final Sentence sentence = new Sentence("15", "3", "这一句话。");
     private final Error error = new Error("句", "句子成分残缺", 
@@ -62,11 +78,17 @@ public class HSSProject extends Application {
     @Override
     public void start(Stage primaryStage) {
         
+        currentStage = primaryStage;
+        fileChooser = new FileChooser();
+        configureFileChooser(fileChooser);
+       
+        
         Parent root = initialiseUI();
+        
         
         Scene scene = new Scene(root, 1280, 720);
         
-//        System.out.println(mark.toString());
+//        TextAreaController.readEssay("src/essay/童年的杨柳叶.txt");
         
         primaryStage.setTitle("作文标注");
         primaryStage.setScene(scene);
@@ -83,6 +105,14 @@ public class HSSProject extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    private static void configureFileChooser(FileChooser fileChooser) {      
+        fileChooser.setTitle("打开作文");
+        fileChooser.setInitialDirectory(new File("src/essay"));
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("TXT", "*.txt")
+        );
     }
     
     private Node initialiseTableView(){
@@ -137,11 +167,70 @@ public class HSSProject extends Application {
     }
     
     private Node initialiseMenuBar(){
-        MenuBar menuBar = new MenuBar();
-        Menu menuFile = new Menu("文件");
-        Menu menuAbout = new Menu("关于");
-        menuBar.getMenus().addAll(menuFile, menuAbout);
-        return menuBar;
+        final Button openButton = new Button("打开");
+        openButton.setGraphic(new ImageView("file:src/img/glyphicons-145-folder-open.png"));
+        openButton.setPrefWidth(80);
+        openButton.setOnAction(ToolbarController.openFileEventHandler());
+
+        final Button saveButton = new Button("保存");
+        saveButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
+        saveButton.setPrefWidth(80);
+        
+//        final Button left2 = new Button( "left2 button" );
+
+
+//        final Button userAccountButton = new Button();
+//        userAccountButton.setGraphic(new ImageView("file:src/img/glyphicons-4-user.png"));
+
+        final Button logoutButton = new Button();
+        logoutButton.setGraphic(new ImageView("file:src/img/glyphicons-388-log-out.png"));
+        
+        final Label usernameLabel = new Label("当前用户: weiyumou");
+        final Label usercategoryLabel = new Label("类别: 管理员");
+//        final Button right2 = new Button( "right2 button" );
+//        final Button right3 = new Button( "right3 button" );
+        
+        final Label titleLabel = new Label("当前文章: ");
+        final Label authorIDLabel = new Label("作者序号: ");
+        
+        final Button authorinfoButton = new Button("查看作者信息");
+//        final Button center1 = new Button( "center1 button" );
+
+    /*
+     * Extending the default ToolBar has the benefit, that you inherit useful features, like auto-collapse
+     * (try resizing the window to something small).
+     */
+        final ToolBar toolBar = new ToolBar();
+        final HBox leftSection = new HBox(openButton, saveButton);
+        final HBox centerSection = new HBox(titleLabel, authorIDLabel, authorinfoButton);
+        final HBox rightSection = new HBox(usernameLabel, usercategoryLabel, logoutButton);
+
+
+    /* Center all sections and always grow them. Has the effect known as JUSTIFY. */
+        HBox.setHgrow( leftSection, Priority.ALWAYS );
+        HBox.setHgrow( centerSection, Priority.ALWAYS );
+        HBox.setHgrow( rightSection, Priority.ALWAYS );
+
+        leftSection.setAlignment( Pos.CENTER_LEFT );
+        centerSection.setAlignment( Pos.CENTER );
+        rightSection.setAlignment( Pos.CENTER_RIGHT );
+
+    /* It might be harder to propagate some properties: */
+        final int spacing = 8;
+        toolBar.setPadding( new Insets( 0, spacing, 0, spacing ) );
+        leftSection.setSpacing( spacing );
+        centerSection.setSpacing( spacing );
+        rightSection.setSpacing( spacing );
+
+        toolBar.getItems().addAll( leftSection, centerSection, rightSection );
+
+//        openButton.setOnAction( event -> System.out.println( "left" ) );
+//        right.setOnAction( event -> System.out.println( "right" ) );
+//        center.setOnAction( event -> System.out.println( "center" ) );
+        
+        toolBar.setPrefHeight(40);
+        
+        return toolBar;
     }
     
     private Node intialiseCentre(){
@@ -160,9 +249,10 @@ public class HSSProject extends Application {
             centerPane.getRowConstraints().add(row);
         }
         
-        TextArea prevEssay = new TextArea();
-        TextArea currEssay = new TextArea();
-        TextArea nextEssay = new TextArea();
+        prevEssay = new TextArea();
+        currEssay = new TextArea();
+        nextEssay = new TextArea();
+        
         prevEssay.setOpacity(0.5);
         prevEssay.setEditable(false);
         nextEssay.setOpacity(0.5);
@@ -185,9 +275,7 @@ public class HSSProject extends Application {
         errorTreeView.setEditable(true);
         errorTreeView.setCellFactory((TreeView<String> p) -> new TextFieldTreeCellImpl());
         centerPane.add(errorTreeView, 1, 0, 1, 3);
-        
-        
-        
+
         return centerPane;
     }
     
@@ -207,5 +295,21 @@ public class HSSProject extends Application {
 
     public static TreeView<String> getErrorTreeView() {
         return errorTreeView;
+    }
+
+    public static TextArea getPrevEssay() {
+        return prevEssay;
+    }
+
+    public static TextArea getCurrEssay() {
+        return currEssay;
+    }
+
+    public static TextArea getNextEssay() {
+        return nextEssay;
+    }
+
+    public static File showFileChooser() {
+        return fileChooser.showOpenDialog(currentStage);
     }
 }
