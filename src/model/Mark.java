@@ -5,38 +5,72 @@
  */
 package model;
 
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
  * @author weiyumou
  */
-public class Mark {
-    private final SimpleStringProperty authorID;
-    private final SimpleStringProperty idInEssay;
-    private final SimpleStringProperty idInParagraph;
-    private final SimpleStringProperty sentenceContent;
-    private final SimpleStringProperty typeIError;
-    private final SimpleStringProperty typeIIError;
-    private final SimpleStringProperty typeIIIError;
-    private final SimpleStringProperty errorSegment;
-    private final SimpleStringProperty remark;
+public class Mark implements Serializable{
     
     private Sentence sentence;
     private Error error;
+    private String authorID;
 
     public Mark(String authorID, Sentence sentence, Error error) {
-        this.authorID = new SimpleStringProperty(authorID);
-        this.idInEssay = new SimpleStringProperty(sentence.getIdInEssay());
-        this.idInParagraph = new SimpleStringProperty(sentence.getIdInParagraph());
-        this.sentenceContent = new SimpleStringProperty(sentence.getContent());
-        this.typeIError = new SimpleStringProperty(error.getTypeI());
-        this.typeIIError = new SimpleStringProperty(error.getTypeII());
-        this.typeIIIError = new SimpleStringProperty(error.getTypeIII());
-        this.errorSegment = new SimpleStringProperty(error.getSegment());
-        this.remark = new SimpleStringProperty(error.getRemark());
+        this.authorID = authorID;
+        this.sentence = sentence;
+        this.error = error;
     }
-
+    
+    public SimpleStringProperty authoridProperty(){
+        return new SimpleStringProperty(authorID);
+    }
+    public SimpleStringProperty idInEssayProperty(){
+        return new SimpleStringProperty(sentence.getIdInEssay());
+    }
+    public SimpleStringProperty idInParagraphProperty(){
+        return new SimpleStringProperty(sentence.getIdInParagraph());
+    }
+    public SimpleStringProperty sentenceContentProperty(){
+        return new SimpleStringProperty(sentence.getContent());
+    }
+    public SimpleStringProperty typeIErrorProperty(){
+        String err;
+        try {
+            err = error.getErrorTypes().get(0);
+        } catch (IndexOutOfBoundsException e) {
+            err = "";
+        }
+        return new SimpleStringProperty(err);
+    }
+    public SimpleStringProperty typeIIErrorProperty(){
+        String err;
+        try {
+            err = error.getErrorTypes().get(1);
+        } catch (IndexOutOfBoundsException e) {
+            err = "";
+        }
+        return new SimpleStringProperty(err);
+    }
+    public SimpleStringProperty typeIIIErrorProperty(){
+        String err;
+        try {
+            err = error.getErrorTypes().get(2);
+        } catch (IndexOutOfBoundsException e) {
+            err = "";
+        }
+        return new SimpleStringProperty(err);
+    }
+    public SimpleStringProperty errorSegmentProperty(){
+        return new SimpleStringProperty(error.getSegment());
+    }
+    public SimpleStringProperty remarkProperty(){
+        return new SimpleStringProperty(error.getRemark());
+    }
+    
+    
     public Sentence getSentence() {
         return sentence;
     }
@@ -54,48 +88,36 @@ public class Mark {
     }
 
     public String getAuthorID() {
-        return authorID.get();
+        return authorID;
     }
 
-    public String getIdInEssay() {
-        return idInEssay.get();
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+        if (!Mark.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Mark other = (Mark) obj;
+        
+        if ((this.getAuthorID() == null) ? (other.getAuthorID() != null) 
+            : !this.getAuthorID().equals(other.getAuthorID())) {
+            return false;
+        }
+        if (!this.getSentence().equals(other.getSentence())) {
+            return false;
+        }
+        if(!this.getError().equals(other.getError())){
+            return false;
+        }
+        return true;
     }
-
-    public String getIdInParagraph() {
-        return idInParagraph.get();
-    }
-
-    public String getSentenceContent() {
-        return sentenceContent.get();
-    }
-
-    public String getTypeIError() {
-        return typeIError.get();
-    }
-
-    public String getTypeIIError() {
-        return typeIIError.get();
-    }
-
-    public String getTypeIIIError() {
-        return typeIIIError.get();
-    }
-
-    public String getErrorSegment() {
-        return errorSegment.get();
-    }
-
-    public String getRemark() {
-        return remark.get();
-    }
-
     
-
-//    @Override
-//    public String toString() {
-//        return "Mark{" + "authorID=" + authorID + ", idInEssay=" + idInEssay + ", idInParagraph=" + idInParagraph + ", sentenceContent=" + sentenceContent + ", typeIError=" + typeIError + ", typeIIError=" + typeIIError + ", typeIIIError=" + typeIIIError + ", errorSegment=" + errorSegment + ", remark=" + remark + '}';
-//    }
-    
-    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.getAuthorID() != null ? this.getAuthorID().hashCode() : 0);
+        return hash;
+    }
 }
-

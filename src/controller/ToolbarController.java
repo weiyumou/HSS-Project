@@ -6,8 +6,13 @@
 package controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import model.Mark;
 import view.MainScreen;
 
 /**
@@ -15,30 +20,40 @@ import view.MainScreen;
  * @author weiyumou
  */
 public class ToolbarController {
-    public static EventHandler<ActionEvent> openFileEventHandler(){
+
+    public static EventHandler<ActionEvent> openFileEventHandler() {
         return (ActionEvent event) -> {
-            File file = MainScreenController.showFileChooser();
+            File file = MainScreenController.showOpenFileChooser();
             if (file != null) {
                 TextAreaController.readEssay(file.getPath());
             }
         };
     }
-    
-    public static void adjustUserDisplay(String user, String userType){
+
+    public static EventHandler<ActionEvent> saveFileEventHandler() {
+        return (ActionEvent event) -> {
+            File file = MainScreenController.showSaveFileChooser();
+            if (file != null) {
+                TableViewController.dump(file.getPath());
+            }
+        };
+    }
+
+    public static void adjustUserDisplay(String user, String userType) {
         MainScreen.setUsernameLabel(user);
         MainScreen.setUsercategoryLabel(userType);
-        if(userType.equals("管理员")){
+        if (userType.equals("管理员")) {
             MainScreen.getAuthorinfoButton().setVisible(true);
         }
     }
-    
-    public static void adjustEssayDisplay(String title, String author){
+
+    public static void adjustEssayDisplay(String title, String author) {
         resetEssayDisplay();
         MainScreen.setEssayTitle(title);
         MainScreen.setAuthorID(author);
     }
-    
-    public static void resetEssayDisplay(){
+
+    public static void resetEssayDisplay() {
         MainScreen.clearEssayTitle();
         MainScreen.clearAuthorID();
         MainScreen.setEssayTitle("当前文章: ");

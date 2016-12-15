@@ -98,4 +98,20 @@ public class TextAreaController {
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
     }
+    
+    public static String getAuthorID(){
+        return currentEssay.getAuthorID();
+    }
+    
+    public static String getEssayTitle(){
+        if(currentEssay == null){
+            return "";
+        }
+        return currentEssay.getTitle();
+    }
+
+    public static Sentence getCurrentSentence() {
+        return currentSentence;
+    }
+    
 }

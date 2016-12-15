@@ -5,46 +5,42 @@
  */
 package model;
 
-import controller.TreeViewController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
 
 /**
  *
  * @author weiyumou
  */
-public class TextFieldTreeCellImpl extends TreeCell<String>{
+public class EditingCell extends TableCell<Mark, String> {
+
     private TextField textField;
-    private boolean addNewOtherItem;
-    
-    
-    public TextFieldTreeCellImpl() {
-        setOnMouseClicked(TreeViewController.getMouseEventHandler());
-        addNewOtherItem = false;
+
+    public EditingCell() {
     }
 
     @Override
     public void startEdit() {
         super.startEdit();
-        
-        String currText = (String) getItem();
-        addNewOtherItem =  currText.equals(TreeViewController.TRIGGER_STRING);
-        
         if (textField == null) {
             createTextField();
         }
         setText(null);
         setGraphic(textField);
         textField.selectAll();
+        textField.requestFocus();
         setVisible(false);
     }
 
     @Override
     public void cancelEdit() {
         super.cancelEdit();
+
         setText((String) getItem());
         setGraphic(null);
     }
@@ -72,21 +68,18 @@ public class TextFieldTreeCellImpl extends TreeCell<String>{
 
     private void createTextField() {
         textField = new TextField(getString());
-        if(addNewOtherItem){
-            textField.setText("");
-        }
-        textField.setOnKeyReleased((KeyEvent t) -> {
-            if (t.getCode() == KeyCode.ENTER) {
+        textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+        textField.focusedProperty().addListener((ObservableValue<? extends Boolean> 
+            arg0, Boolean arg1, Boolean arg2) -> {
+            if (!arg2) {
                 commitEdit(textField.getText());
-                if(addNewOtherItem && !textField.getText()
-                    .equals(TreeViewController.TRIGGER_STRING)){
-                    TreeViewController.addNewOtherItem();
-                }
-            } else if (t.getCode() == KeyCode.ESCAPE) {
-                cancelEdit();
             }
         });
-        
+        textField.setOnKeyReleased((KeyEvent event) -> {
+            if(event.getCode() == KeyCode.ENTER){
+                commitEdit(textField.getText());
+            }
+        });
     }
 
     private String getString() {

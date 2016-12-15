@@ -5,47 +5,34 @@
  */
 package model;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  *
  * @author weiyumou
  */
-public class Error {
-    private String typeI;
-    private String typeII;
-    private String typeIII;
+public class Error implements Serializable{
+//    private String typeI;
+//    private String typeII;
+//    private String typeIII;
+    
+    private List<String> errorTypes;
     private String segment;
     private String remark;
 
-    public Error(String typeI, String typeII, String typeIII, String segment, String remark) {
-        this.typeI = typeI;
-        this.typeII = typeII;
-        this.typeIII = typeIII;
+    public Error(List<String> errorTypes, String segment, String remark) {
+        this.errorTypes = errorTypes;
         this.segment = segment;
         this.remark = remark;
     }
 
-    public String getTypeI() {
-        return typeI;
+    public List<String> getErrorTypes() {
+        return errorTypes;
     }
 
-    public void setTypeI(String typeI) {
-        this.typeI = typeI;
-    }
-
-    public String getTypeII() {
-        return typeII;
-    }
-
-    public void setTypeII(String typeII) {
-        this.typeII = typeII;
-    }
-
-    public String getTypeIII() {
-        return typeIII;
-    }
-
-    public void setTypeIII(String typeIII) {
-        this.typeIII = typeIII;
+    public void setErrorTypes(List<String> errorTypes) {
+        this.errorTypes = errorTypes;
     }
 
     public String getSegment() {
@@ -62,5 +49,35 @@ public class Error {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+        if (!Sentence.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Error other = (Error) obj;
+        
+        if ((this.getSegment() == null) ? (other.getSegment() != null) 
+            : !this.getSegment().equals(other.getSegment())) {
+            return false;
+        }
+        if ((this.getErrorTypes() == null) ? (other.getErrorTypes() != null) 
+            : !this.getErrorTypes().equals(other.getErrorTypes())) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.getSegment() != null ? this.getSegment().hashCode() : 0);
+        hash = 53 * hash + (this.getErrorTypes() != null ? this.getErrorTypes().hashCode() : 0);
+        return hash;
     }
 }

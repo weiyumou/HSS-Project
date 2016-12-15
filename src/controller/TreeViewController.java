@@ -13,7 +13,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -25,6 +27,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.SAXException;
 import view.MainScreen;
+import model.Error;
+import model.Mark;
 /**
  *
  * @author weiyumou
@@ -81,9 +85,26 @@ public class TreeViewController {
         return (MouseEvent mouseEvent) -> {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 1){
-                    System.out.println("Single clicked");
+                    TreeView<String> errorTreeView = MainScreen.getErrorTreeView();
+                    TreeItem<String> currNode = errorTreeView.getSelectionModel().getSelectedItem();
+                    String selectedText = MainScreen.getCurrEssay().getSelectedText();
                     
-                    
+                    if(!(currNode.getChildren().size() > 1 || 
+                        currNode.getValue().equals(TRIGGER_STRING) || 
+                        selectedText.isEmpty())){
+                        
+                        List<String> errorTypes = new ArrayList<>();
+                        while(currNode.getParent() != null){
+                            errorTypes.add(currNode.getValue());
+                            currNode = currNode.getParent();
+                        }
+                        Collections.reverse(errorTypes);
+                        
+                        Error error = new Error(errorTypes, selectedText, "");
+                        Mark mark = new Mark(TextAreaController.getAuthorID(), 
+                            TextAreaController.getCurrentSentence(), error);
+                        TableViewController.load(mark);
+                    }
                 }
             }
         };

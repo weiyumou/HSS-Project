@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author weiyumou
  */
-public class Sentence {
+public class Sentence implements Serializable{
     private String idInEssay;
     private String idInParagraph;
     private String content;
@@ -47,5 +49,39 @@ public class Sentence {
 
     public String getContent() {
         return content;
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+        if (!Sentence.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Sentence other = (Sentence) obj;
+        
+        if ((this.getIdInEssay() == null) ? (other.getIdInEssay() != null) 
+            : !this.getIdInEssay().equals(other.getIdInEssay())) {
+            return false;
+        }
+        if ((this.getIdInParagraph() == null) ? (other.getIdInParagraph() != null) 
+            : !this.getIdInParagraph().equals(other.getIdInParagraph())) {
+            return false;
+        }
+        if ((this.getContent() == null) ? (other.getContent() != null) 
+            : !this.getContent().equals(other.getContent())) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.getIdInEssay() != null ? this.getIdInEssay().hashCode() : 0);
+        hash = 53 * hash + (this.getIdInEssay() != null ? this.getIdInEssay().hashCode() : 0);
+        hash = 53 * hash + (this.getContent() != null ? this.getContent().hashCode() : 0);
+        return hash;
     }
 }

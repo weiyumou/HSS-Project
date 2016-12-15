@@ -10,17 +10,20 @@ import controller.TextAreaController;
 import controller.ToolbarController;
 import controller.TreeViewController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -32,6 +35,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import model.EditingCell;
 import model.Mark;
 import model.TextFieldTreeCellImpl;
 
@@ -41,7 +46,8 @@ import model.TextFieldTreeCellImpl;
  */
 public class MainScreen extends Application {
     
-    private static FileChooser fileChooser;
+    private static FileChooser openFileChooser;
+    private static FileChooser saveFileChooser;
     private static TreeView<String> errorTreeView;
     private static TableView<Mark> markTableView;
     private static TextArea prevEssay;
@@ -54,11 +60,7 @@ public class MainScreen extends Application {
     private static Label titleLabel;
     private static Label authorIDLabel;
     
-//    private static final Sentence sentence = new Sentence("15", "3", "这一句话。");
-//    private static final Error error = new Error("句", "句子成分残缺", 
-//            "谓语残缺", "这一句话。", "缺少\"是\"");
-//    
-//    private static final Mark mark = new Mark("1", sentence, error);
+    
 //    
 //    private static final ObservableList<Mark> data =
 //        FXCollections.observableArrayList(
@@ -98,7 +100,7 @@ public class MainScreen extends Application {
         
         TableColumn authorIDCol = new TableColumn("作者序号");
         authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
-        authorIDCol.setCellValueFactory(new PropertyValueFactory<>("authorID"));
+        authorIDCol.setCellValueFactory(new PropertyValueFactory<>("authorid"));
  
         TableColumn idInEssayCol = new TableColumn("句子序号");
         idInEssayCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
@@ -128,11 +130,25 @@ public class MainScreen extends Application {
         errorSegmentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         errorSegmentCol.setCellValueFactory(new PropertyValueFactory<>("errorSegment"));
         
+        Callback<TableColumn, TableCell> cellFactory = (TableColumn p) -> new EditingCell();
         TableColumn remarkCol = new TableColumn("备注");
         remarkCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol / 2.0));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
+        remarkCol.setCellFactory(cellFactory);
+        remarkCol.setOnEditCommit(
+            new EventHandler<CellEditEvent<Mark, String>>() {
+                @Override
+                public void handle(CellEditEvent<Mark, String> t) {
+                    Mark currMark = t.getTableView().getItems().get(
+                        t.getTablePosition().getRow());
+                    currMark.getError().setRemark(t.getNewValue());
+                }
+            }
+        );
         
-//        markTableView.setItems(data);
+        markTableView.setEditable(true);
+        
+
         markTableView.getColumns().addAll(authorIDCol, idInEssayCol, idInParaCol,
             contentCol, typeIErrorCol, typeIIErrorCol, typeIIIErrorCol,
             errorSegmentCol, remarkCol);
@@ -151,6 +167,7 @@ public class MainScreen extends Application {
         final Button saveButton = new Button("保存");
         saveButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
         saveButton.setPrefWidth(80);
+        saveButton.setOnAction(ToolbarController.saveFileEventHandler());
         
 //        final Button left2 = new Button( "left2 button" );
 
@@ -295,13 +312,24 @@ public class MainScreen extends Application {
         return nextEssay;
     }
 
-    public static FileChooser getFileChooser() {
-        return fileChooser;
+    public static FileChooser getOpenFileChooser() {
+        return openFileChooser;
     }
 
-    public static void setFileChooser(FileChooser fileChooser) {
-        MainScreen.fileChooser = fileChooser;
+    public static void setOpenFileChooser(FileChooser fileChooser) {
+        openFileChooser = fileChooser;
     }
+
+    public static FileChooser getSaveFileChooser() {
+        return saveFileChooser;
+    }
+
+    public static void setSaveFileChooser(FileChooser saveFileChooser) {
+        MainScreen.saveFileChooser = saveFileChooser;
+    }
+    
+    
+    
     
     public static Parent buildUI(){
         return initialiseUI();
