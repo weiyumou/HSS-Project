@@ -9,7 +9,7 @@ import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
-import view.HSSProject;
+import view.MainScreen;
 
 /**
  *
@@ -18,10 +18,15 @@ import view.HSSProject;
 public class ToolbarController {
     public static EventHandler<ActionEvent> openFileEventHandler(){
         return (ActionEvent event) -> {
-            File file = HSSProject.showFileChooser();
+            File file = MainScreen.showFileChooser();
             if (file != null) {
                 TextAreaController.readEssay(file.getPath());
             }
         };
+    }
+    
+    public static void adjustDisplay(String user, String userType){
+        MainScreen.setUsernameLabel(user);
+        MainScreen.setUsercategoryLabel(userType);
     }
 }

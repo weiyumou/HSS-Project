@@ -5,6 +5,7 @@
  */
 package view;
 
+import controller.LoginController;
 import controller.TextAreaController;
 import controller.ToolbarController;
 import controller.TreeViewController;
@@ -44,24 +45,28 @@ import model.TextFieldTreeCellImpl;
  *
  * @author weiyumou
  */
-public class HSSProject extends Application {
+public class MainScreen extends Application {
     
     private static Stage currentStage;
     
     private static FileChooser fileChooser;
     
     private static TreeView<String> errorTreeView;
+    private static TableView<Mark> table;
     private static TextArea prevEssay;
     private static TextArea currEssay;
     private static TextArea nextEssay;
     
-    private final Sentence sentence = new Sentence("15", "3", "这一句话。");
-    private final Error error = new Error("句", "句子成分残缺", 
+    private static Label usernameLabel;
+    private static Label usercategoryLabel;
+    
+    private static final Sentence sentence = new Sentence("15", "3", "这一句话。");
+    private static final Error error = new Error("句", "句子成分残缺", 
             "谓语残缺", "这一句话。", "缺少\"是\"");
     
-    private final Mark mark = new Mark("1", sentence, error);
+    private static final Mark mark = new Mark("1", sentence, error);
     
-    private final ObservableList<Mark> data =
+    private static final ObservableList<Mark> data =
         FXCollections.observableArrayList(
             new Mark("1", sentence, error),
                 new Mark("1", sentence, error),
@@ -79,25 +84,25 @@ public class HSSProject extends Application {
     public void start(Stage primaryStage) {
         
         currentStage = primaryStage;
-        fileChooser = new FileChooser();
-        configureFileChooser(fileChooser);
-       
         
-        Parent root = initialiseUI();
-        
-        
-        Scene scene = new Scene(root, 1280, 720);
-        
-//        TextAreaController.readEssay("src/essay/童年的杨柳叶.txt");
-        
-        primaryStage.setTitle("作文标注");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        LoginController.showLoginScreen();
+
+//        Parent root = initialiseUI();
+
+//        Scene scene = new Scene(root, 1280, 720);
+//        
+////        TextAreaController.readEssay("src/essay/童年的杨柳叶.txt");
+//        
+//        primaryStage.setTitle("作文标注");
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
     
     @Override
     public void stop(){
-        TreeViewController.saveCurrentTreeView();
+        if(errorTreeView != null){
+            TreeViewController.saveCurrentTreeView();
+        }
     }
 
     /**
@@ -107,18 +112,12 @@ public class HSSProject extends Application {
         launch(args);
     }
     
-    private static void configureFileChooser(FileChooser fileChooser) {      
-        fileChooser.setTitle("打开作文");
-        fileChooser.setInitialDirectory(new File("src/essay"));
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("TXT", "*.txt")
-        );
-    }
     
-    private Node initialiseTableView(){
+    
+    private static Node initialiseTableView(){
         final int numOfCol = 9;
         
-        TableView<Mark> table = new TableView<>();
+        table = new TableView<>();
         
         TableColumn authorIDCol = new TableColumn("作者序号");
         authorIDCol.prefWidthProperty().bind(table.widthProperty().divide(numOfCol * 2));
@@ -166,7 +165,7 @@ public class HSSProject extends Application {
         return table;
     }
     
-    private Node initialiseMenuBar(){
+    private static Node initialiseMenuBar(){
         final Button openButton = new Button("打开");
         openButton.setGraphic(new ImageView("file:src/img/glyphicons-145-folder-open.png"));
         openButton.setPrefWidth(80);
@@ -185,8 +184,8 @@ public class HSSProject extends Application {
         final Button logoutButton = new Button();
         logoutButton.setGraphic(new ImageView("file:src/img/glyphicons-388-log-out.png"));
         
-        final Label usernameLabel = new Label("当前用户: weiyumou");
-        final Label usercategoryLabel = new Label("类别: 管理员");
+        usernameLabel = new Label("当前用户: ");
+        usercategoryLabel = new Label("类别: ");
 //        final Button right2 = new Button( "right2 button" );
 //        final Button right3 = new Button( "right3 button" );
         
@@ -233,7 +232,7 @@ public class HSSProject extends Application {
         return toolBar;
     }
     
-    private Node intialiseCentre(){
+    private static Node intialiseCentre(){
         GridPane centerPane = new GridPane();
         
         ColumnConstraints col1 = new ColumnConstraints();
@@ -280,7 +279,7 @@ public class HSSProject extends Application {
     }
     
     
-    private Parent initialiseUI(){
+    private static Parent initialiseUI(){
         
         BorderPane rootPane = new BorderPane();
 
@@ -311,5 +310,29 @@ public class HSSProject extends Application {
 
     public static File showFileChooser() {
         return fileChooser.showOpenDialog(currentStage);
+    }
+
+    public static Stage getCurrentStage() {
+        return currentStage;
+    }
+
+    public static FileChooser getFileChooser() {
+        return fileChooser;
+    }
+
+    public static void setFileChooser(FileChooser fileChooser) {
+        MainScreen.fileChooser = fileChooser;
+    }
+    
+    public static Parent buildUI(){
+        return initialiseUI();
+    }
+
+    public static void setUsernameLabel(String username) {
+        usernameLabel.setText(usernameLabel.getText() + username);
+    }
+
+    public static void setUsercategoryLabel(String userType) {
+        usercategoryLabel.setText(usercategoryLabel.getText() + userType);
     }
 }

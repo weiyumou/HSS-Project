@@ -17,7 +17,7 @@ import javafx.beans.value.ObservableValue;
 import model.Essay;
 import model.Paragraph;
 import model.Sentence;
-import view.HSSProject;
+import view.MainScreen;
 
 /**
  *
@@ -49,6 +49,6 @@ public class TextAreaController {
     }
     
     private static void displayEssay(){
-        HSSProject.getCurrEssay().setText(currentEssay.toString());
+        MainScreen.getCurrEssay().setText(currentEssay.toString());
     }
 }

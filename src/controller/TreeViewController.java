@@ -24,7 +24,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.SAXException;
-import view.HSSProject;
+import view.MainScreen;
 /**
  *
  * @author weiyumou
@@ -73,7 +73,7 @@ public class TreeViewController {
     }
     
     public static void clearSelections(){
-        TreeView<String> errorTreeView = HSSProject.getErrorTreeView();
+        TreeView<String> errorTreeView = MainScreen.getErrorTreeView();
         errorTreeView.getSelectionModel().clearSelection();
     }
     
@@ -89,7 +89,7 @@ public class TreeViewController {
     }
     
     public static void addNewOtherItem(){
-        TreeView<String> errorTreeView = HSSProject.getErrorTreeView();
+        TreeView<String> errorTreeView = MainScreen.getErrorTreeView();
         TreeItem<String> currNode = errorTreeView.getSelectionModel().getSelectedItem();
         currNode.getParent().getChildren().add(new TreeItem<>(TRIGGER_STRING));
     }
@@ -123,7 +123,7 @@ public class TreeViewController {
     
     
     public static void saveCurrentTreeView(){
-        TreeView<String> errorTreeView = HSSProject.getErrorTreeView();
+        TreeView<String> errorTreeView = MainScreen.getErrorTreeView();
         TreeItem<String> treeItemRoot = errorTreeView.getRoot();
         String xmlString;
         try (StringWriter stringWriter = new StringWriter()) {
