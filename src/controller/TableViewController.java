@@ -5,8 +5,11 @@
  */
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,46 +22,36 @@ import view.MainScreen;
  */
 public class TableViewController {
 
-    private static final ObservableList<Mark> tableData = FXCollections.observableArrayList();
+    private static ObservableList<Mark> tableData = FXCollections.observableArrayList();
 
-    public static void load(Mark mark) {
+    public static void loadData(Mark mark) {
         if (!tableData.contains(mark)) {
             tableData.add(mark);
+            MainScreen.getMarkTableView().setItems(tableData);
+            
+        }
+    }
+
+    public static void load(File path) {
+        tableData = FXCollections.observableArrayList();
+        try (ObjectInputStream ois
+                = new ObjectInputStream(new FileInputStream(path))) {
+            while (true) {
+                tableData.add((Mark) ois.readObject());
+            }
+        } catch (IOException | ClassNotFoundException ex) {
             MainScreen.getMarkTableView().setItems(tableData);
         }
     }
 
-    public static ObservableList<Mark> getTableData() {
-        return tableData;
-    }
-
     public static void dump(String path) {
-        FileOutputStream fout = null;
-        ObjectOutputStream oos = null;
-        try {
-            fout = new FileOutputStream(path);
-            oos = new ObjectOutputStream(fout);
-            ObservableList<Mark> tableData = TableViewController.getTableData();
-            oos.writeObject(tableData.get(0));
+        try (ObjectOutputStream oos
+                = new ObjectOutputStream(new FileOutputStream(path))) {
+            for(int i = 0; i != tableData.size(); ++i){
+                 oos.writeObject(tableData.get(i));
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
-        } finally {
-            if (fout != null) {
-                try {
-                    fout.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
-

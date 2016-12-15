@@ -26,6 +26,18 @@ public class ToolbarController {
             File file = MainScreenController.showOpenFileChooser();
             if (file != null) {
                 TextAreaController.readEssay(file.getPath());
+                String datPath = file.getPath().replace(".txt", ".dat");
+                File datFile = new File(datPath);
+                if(datFile.exists() && !datFile.isDirectory()){
+                    TableViewController.load(datFile);
+                }else{
+                    datFile.getParentFile().mkdirs();
+                    try {
+                        datFile.createNewFile();
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
             }
         };
     }

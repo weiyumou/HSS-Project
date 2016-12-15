@@ -6,14 +6,15 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
  * @author weiyumou
  */
-public class Mark implements Serializable{
-    
+public class Mark implements Serializable {
+
     private Sentence sentence;
     private Error error;
     private String authorID;
@@ -23,20 +24,24 @@ public class Mark implements Serializable{
         this.sentence = sentence;
         this.error = error;
     }
-    
-    public SimpleStringProperty authoridProperty(){
+
+    public SimpleStringProperty authoridProperty() {
         return new SimpleStringProperty(authorID);
     }
-    public SimpleStringProperty idInEssayProperty(){
+
+    public SimpleStringProperty idInEssayProperty() {
         return new SimpleStringProperty(sentence.getIdInEssay());
     }
-    public SimpleStringProperty idInParagraphProperty(){
+
+    public SimpleStringProperty idInParagraphProperty() {
         return new SimpleStringProperty(sentence.getIdInParagraph());
     }
-    public SimpleStringProperty sentenceContentProperty(){
+
+    public SimpleStringProperty sentenceContentProperty() {
         return new SimpleStringProperty(sentence.getContent());
     }
-    public SimpleStringProperty typeIErrorProperty(){
+
+    public SimpleStringProperty typeIErrorProperty() {
         String err;
         try {
             err = error.getErrorTypes().get(0);
@@ -45,7 +50,8 @@ public class Mark implements Serializable{
         }
         return new SimpleStringProperty(err);
     }
-    public SimpleStringProperty typeIIErrorProperty(){
+
+    public SimpleStringProperty typeIIErrorProperty() {
         String err;
         try {
             err = error.getErrorTypes().get(1);
@@ -54,7 +60,8 @@ public class Mark implements Serializable{
         }
         return new SimpleStringProperty(err);
     }
-    public SimpleStringProperty typeIIIErrorProperty(){
+
+    public SimpleStringProperty typeIIIErrorProperty() {
         String err;
         try {
             err = error.getErrorTypes().get(2);
@@ -63,14 +70,15 @@ public class Mark implements Serializable{
         }
         return new SimpleStringProperty(err);
     }
-    public SimpleStringProperty errorSegmentProperty(){
+
+    public SimpleStringProperty errorSegmentProperty() {
         return new SimpleStringProperty(error.getSegment());
     }
-    public SimpleStringProperty remarkProperty(){
+
+    public SimpleStringProperty remarkProperty() {
         return new SimpleStringProperty(error.getRemark());
     }
-    
-    
+
     public Sentence getSentence() {
         return sentence;
     }
@@ -92,7 +100,7 @@ public class Mark implements Serializable{
     }
 
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -100,24 +108,25 @@ public class Mark implements Serializable{
             return false;
         }
         final Mark other = (Mark) obj;
-        
-        if ((this.getAuthorID() == null) ? (other.getAuthorID() != null) 
-            : !this.getAuthorID().equals(other.getAuthorID())) {
+
+        if ((this.getAuthorID() == null) ? (other.getAuthorID() != null)
+                : !this.getAuthorID().equals(other.getAuthorID())) {
             return false;
         }
-        if (!this.getSentence().equals(other.getSentence())) {
+        if ((this.getSentence() == null) ? (other.getSentence() != null)
+                : !this.getSentence().equals(other.getSentence())) {
             return false;
         }
-        if(!this.getError().equals(other.getError())){
-            return false;
-        }
-        return true;
+        return !((this.getError() == null) ? (other.getError() != null)
+                : !this.getError().equals(other.getError()));
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + (this.getAuthorID() != null ? this.getAuthorID().hashCode() : 0);
+        hash = 73 * hash + Objects.hashCode(this.sentence);
+        hash = 73 * hash + Objects.hashCode(this.error);
+        hash = 73 * hash + Objects.hashCode(this.authorID);
         return hash;
     }
 }

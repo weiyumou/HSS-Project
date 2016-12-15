@@ -7,16 +7,14 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author weiyumou
  */
 public class Error implements Serializable{
-//    private String typeI;
-//    private String typeII;
-//    private String typeIII;
-    
+
     private List<String> errorTypes;
     private String segment;
     private String remark;
@@ -56,7 +54,7 @@ public class Error implements Serializable{
         if (obj == null) {
             return false;
         }
-        if (!Sentence.class.isAssignableFrom(obj.getClass())) {
+        if (!Error.class.isAssignableFrom(obj.getClass())) {
             return false;
         }
         final Error other = (Error) obj;
@@ -65,19 +63,17 @@ public class Error implements Serializable{
             : !this.getSegment().equals(other.getSegment())) {
             return false;
         }
-        if ((this.getErrorTypes() == null) ? (other.getErrorTypes() != null) 
-            : !this.getErrorTypes().equals(other.getErrorTypes())) {
-            return false;
-        }
-        
-        return true;
+        return !((this.getErrorTypes() == null) ? (other.getErrorTypes() != null) 
+                : !this.getErrorTypes().equals(other.getErrorTypes()));
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + (this.getSegment() != null ? this.getSegment().hashCode() : 0);
-        hash = 53 * hash + (this.getErrorTypes() != null ? this.getErrorTypes().hashCode() : 0);
+        hash = 89 * hash + Objects.hashCode(this.errorTypes);
+        hash = 89 * hash + Objects.hashCode(this.segment);
         return hash;
     }
+    
+   
 }

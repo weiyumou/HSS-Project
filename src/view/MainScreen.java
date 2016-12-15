@@ -45,7 +45,7 @@ import model.TextFieldTreeCellImpl;
  * @author weiyumou
  */
 public class MainScreen extends Application {
-    
+
     private static FileChooser openFileChooser;
     private static FileChooser saveFileChooser;
     private static TreeView<String> errorTreeView;
@@ -53,36 +53,20 @@ public class MainScreen extends Application {
     private static TextArea prevEssay;
     private static TextArea currEssay;
     private static TextArea nextEssay;
-    
+
     private static Label usernameLabel;
     private static Label usercategoryLabel;
     private static Button authorinfoButton;
     private static Label titleLabel;
     private static Label authorIDLabel;
-    
-    
-//    
-//    private static final ObservableList<Mark> data =
-//        FXCollections.observableArrayList(
-//            new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error),
-//                new Mark("1", sentence, error)
-//        );
-    
+
     @Override
     public void start(Stage primaryStage) {
         MainScreenController.login();
     }
-    
+
     @Override
-    public void stop(){
+    public void stop() {
         MainScreenController.applicationClose();
     }
 
@@ -93,72 +77,72 @@ public class MainScreen extends Application {
         launch(args);
     }
 
-    private static Node initialiseTableView(){
+    private static Node initialiseTableView() {
         final int numOfCol = 9;
-        
+
         markTableView = new TableView<>();
-        
+        markTableView.setPlaceholder(new Label("没有数据"));
+
         TableColumn authorIDCol = new TableColumn("作者序号");
         authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
         authorIDCol.setCellValueFactory(new PropertyValueFactory<>("authorid"));
- 
+
         TableColumn idInEssayCol = new TableColumn("句子序号");
         idInEssayCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
         idInEssayCol.setCellValueFactory(new PropertyValueFactory<>("idInEssay"));
- 
+
         TableColumn idInParaCol = new TableColumn("句子在段落中序号");
         idInParaCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         idInParaCol.setCellValueFactory(new PropertyValueFactory<>("idInParagraph"));
-        
+
         TableColumn contentCol = new TableColumn("句子");
         contentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         contentCol.setCellValueFactory(new PropertyValueFactory<>("sentenceContent"));
-        
+
         TableColumn typeIErrorCol = new TableColumn("错误类型");
         typeIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIError"));
-        
+
         TableColumn typeIIErrorCol = new TableColumn("具体错误类型");
         typeIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIError"));
-        
+
         TableColumn typeIIIErrorCol = new TableColumn("病句及句子成分错误类型");
         typeIIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIIError"));
- 
+
         TableColumn errorSegmentCol = new TableColumn("错误所在片段");
         errorSegmentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         errorSegmentCol.setCellValueFactory(new PropertyValueFactory<>("errorSegment"));
-        
+
         Callback<TableColumn, TableCell> cellFactory = (TableColumn p) -> new EditingCell();
         TableColumn remarkCol = new TableColumn("备注");
         remarkCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol / 2.0));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
         remarkCol.setCellFactory(cellFactory);
         remarkCol.setOnEditCommit(
-            new EventHandler<CellEditEvent<Mark, String>>() {
-                @Override
-                public void handle(CellEditEvent<Mark, String> t) {
-                    Mark currMark = t.getTableView().getItems().get(
+                new EventHandler<CellEditEvent<Mark, String>>() {
+            @Override
+            public void handle(CellEditEvent<Mark, String> t) {
+                Mark currMark = t.getTableView().getItems().get(
                         t.getTablePosition().getRow());
-                    currMark.getError().setRemark(t.getNewValue());
-                }
+                currMark.getError().setRemark(t.getNewValue());
             }
+        }
         );
-        
+
         markTableView.setEditable(true);
-        
 
         markTableView.getColumns().addAll(authorIDCol, idInEssayCol, idInParaCol,
-            contentCol, typeIErrorCol, typeIIErrorCol, typeIIIErrorCol,
-            errorSegmentCol, remarkCol);
-        
+                contentCol, typeIErrorCol, typeIIErrorCol, typeIIIErrorCol,
+                errorSegmentCol, remarkCol);
+
         markTableView.setPrefHeight(200);
-        
+
         return markTableView;
     }
-    
-    private static Node initialiseToolBar(){
+
+    private static Node initialiseToolBar() {
         final Button openButton = new Button("打开");
         openButton.setGraphic(new ImageView("file:src/img/glyphicons-145-folder-open.png"));
         openButton.setPrefWidth(80);
@@ -168,107 +152,98 @@ public class MainScreen extends Application {
         saveButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
         saveButton.setPrefWidth(80);
         saveButton.setOnAction(ToolbarController.saveFileEventHandler());
-        
+
 //        final Button left2 = new Button( "left2 button" );
-
-
 //        final Button userAccountButton = new Button();
 //        userAccountButton.setGraphic(new ImageView("file:src/img/glyphicons-4-user.png"));
-
         final Button logoutButton = new Button();
         logoutButton.setGraphic(new ImageView("file:src/img/glyphicons-388-log-out.png"));
         logoutButton.setOnAction(MainScreenController.getLogoutEventHandler());
-        
+
         usernameLabel = new Label("当前用户: ");
         usercategoryLabel = new Label("类别: ");
-        
+
 //        final Button right2 = new Button( "right2 button" );
 //        final Button right3 = new Button( "right3 button" );
-        
         titleLabel = new Label("当前文章: ");
         authorIDLabel = new Label("作者序号: ");
         ToolbarController.resetEssayDisplay();
-        
+
         authorinfoButton = new Button("查看作者信息");
         authorinfoButton.setVisible(false);
         authorinfoButton.setDisable(true);
 //        final Button center1 = new Button( "center1 button" );
 
-    /*
+        /*
      * Extending the default ToolBar has the benefit, that you inherit useful features, like auto-collapse
      * (try resizing the window to something small).
-     */
+         */
         final ToolBar toolBar = new ToolBar();
         final HBox leftSection = new HBox(openButton, saveButton);
         final HBox centerSection = new HBox(titleLabel, authorIDLabel, authorinfoButton);
         final HBox rightSection = new HBox(usernameLabel, usercategoryLabel, logoutButton);
 
 
-    /* Center all sections and always grow them. Has the effect known as JUSTIFY. */
-        HBox.setHgrow( leftSection, Priority.ALWAYS );
-        HBox.setHgrow( centerSection, Priority.ALWAYS );
-        HBox.setHgrow( rightSection, Priority.ALWAYS );
+        /* Center all sections and always grow them. Has the effect known as JUSTIFY. */
+        HBox.setHgrow(leftSection, Priority.ALWAYS);
+        HBox.setHgrow(centerSection, Priority.ALWAYS);
+        HBox.setHgrow(rightSection, Priority.ALWAYS);
 
-        leftSection.setAlignment( Pos.CENTER_LEFT );
-        centerSection.setAlignment( Pos.CENTER );
-        rightSection.setAlignment( Pos.CENTER_RIGHT );
+        leftSection.setAlignment(Pos.CENTER_LEFT);
+        centerSection.setAlignment(Pos.CENTER);
+        rightSection.setAlignment(Pos.CENTER_RIGHT);
 
-    /* It might be harder to propagate some properties: */
+        /* It might be harder to propagate some properties: */
         final int spacing = 8;
-        toolBar.setPadding( new Insets( 0, spacing, 0, spacing ) );
-        leftSection.setSpacing( spacing );
-        centerSection.setSpacing( spacing );
-        rightSection.setSpacing( spacing );
+        toolBar.setPadding(new Insets(0, spacing, 0, spacing));
+        leftSection.setSpacing(spacing);
+        centerSection.setSpacing(spacing);
+        rightSection.setSpacing(spacing);
 
-        toolBar.getItems().addAll( leftSection, centerSection, rightSection );
+        toolBar.getItems().addAll(leftSection, centerSection, rightSection);
 
 //        openButton.setOnAction( event -> System.out.println( "left" ) );
 //        right.setOnAction( event -> System.out.println( "right" ) );
 //        center.setOnAction( event -> System.out.println( "center" ) );
-        
         toolBar.setPrefHeight(40);
-        
+
         return toolBar;
     }
-    
-    private static Node intialiseCentre(){
+
+    private static Node intialiseCentre() {
         GridPane centerPane = new GridPane();
-        
+
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setPercentWidth(70);
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setPercentWidth(30);
         centerPane.getColumnConstraints().add(col1);
         centerPane.getColumnConstraints().add(col2);
-        
-        for(int i = 0; i != 3; ++i){
+
+        for (int i = 0; i != 3; ++i) {
             RowConstraints row = new RowConstraints();
-            row.setPercentHeight(100/3.0);
+            row.setPercentHeight(100 / 3.0);
             centerPane.getRowConstraints().add(row);
         }
-        
+
         prevEssay = new TextArea();
         currEssay = new TextArea();
         nextEssay = new TextArea();
-        
+
         prevEssay.setOpacity(0.5);
         prevEssay.setEditable(false);
         nextEssay.setOpacity(0.5);
         nextEssay.setEditable(false);
-        
-//        prevEssay.setText("这里显示之前的句子。");
-//        nextEssay.setText("这里显示之后的句子。");
-//        currEssay.setText("这里显示正在处理的句子。");
-        
+
         prevEssay.setWrapText(true);
         nextEssay.setWrapText(true);
         currEssay.setWrapText(true);
-        
+
         currEssay.setOnScroll(TextAreaController.getScrollEventHandler());
         currEssay.setOnKeyReleased(TextAreaController.getScrollKeyEventHandler());
-        
+
         currEssay.focusedProperty().addListener(TextAreaController.getChangeListener());
-        
+
         centerPane.add(prevEssay, 0, 0, 1, 1);
         centerPane.add(currEssay, 0, 1, 1, 1);
         centerPane.add(nextEssay, 0, 2, 1, 1);
@@ -281,10 +256,9 @@ public class MainScreen extends Application {
 
         return centerPane;
     }
-    
-    
-    private static Parent initialiseUI(){
-        
+
+    private static Parent initialiseUI() {
+
         BorderPane rootPane = new BorderPane();
 
         rootPane.setTop(initialiseToolBar());
@@ -327,11 +301,8 @@ public class MainScreen extends Application {
     public static void setSaveFileChooser(FileChooser saveFileChooser) {
         MainScreen.saveFileChooser = saveFileChooser;
     }
-    
-    
-    
-    
-    public static Parent buildUI(){
+
+    public static Parent buildUI() {
         return initialiseUI();
     }
 
@@ -350,6 +321,7 @@ public class MainScreen extends Application {
     public static void clearEssayTitle() {
         titleLabel.setText("");
     }
+
     public static void setEssayTitle(String title) {
         titleLabel.setText(titleLabel.getText() + title);
     }
@@ -357,6 +329,7 @@ public class MainScreen extends Application {
     public static void setAuthorID(String authorID) {
         authorIDLabel.setText(authorIDLabel.getText() + authorID);
     }
+
     public static void clearAuthorID() {
         authorIDLabel.setText("");
     }
@@ -364,6 +337,5 @@ public class MainScreen extends Application {
     public static TableView<Mark> getMarkTableView() {
         return markTableView;
     }
-    
-    
+
 }
