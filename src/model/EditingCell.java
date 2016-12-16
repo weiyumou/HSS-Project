@@ -8,7 +8,6 @@ package model;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -18,8 +17,6 @@ import javafx.scene.input.KeyEvent;
  */
 public class EditingCell extends TableCell<Mark, String> {
 
-//    private TextField textField;
-    
     private TextArea textField;
 
     public EditingCell() {
@@ -70,17 +67,15 @@ public class EditingCell extends TableCell<Mark, String> {
     }
 
     private void createTextField() {
-//        textField = new TextField(getString());
         textField = new TextArea(getString());
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-        textField.focusedProperty().addListener((ObservableValue<? extends Boolean> 
-            arg0, Boolean arg1, Boolean arg2) -> {
+        textField.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) -> {
             if (!arg2) {
                 commitEdit(textField.getText());
             }
         });
         textField.setOnKeyReleased((KeyEvent event) -> {
-            if(event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 commitEdit(textField.getText());
             }
         });

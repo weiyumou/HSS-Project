@@ -39,6 +39,7 @@ public class TextFieldTreeCellImpl extends TreeCell<String>{
         setText(null);
         setGraphic(textField);
         textField.selectAll();
+        textField.requestFocus();
         setVisible(false);
     }
 

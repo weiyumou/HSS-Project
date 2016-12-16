@@ -16,15 +16,17 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
-import model.Error;
 import view.MainScreen;
 
 /**
@@ -33,8 +35,8 @@ import view.MainScreen;
  */
 public class TableViewController {
 
-    private static ObservableList<Mark> tableData = FXCollections.observableArrayList();
-    private static ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
+    private static ObservableList<Mark> tableData;
+    private static final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
     private static File dataFile;
 
     public static void loadData(Mark mark) {
@@ -47,14 +49,15 @@ public class TableViewController {
     }
 
     public static void load() {
-        tableData = FXCollections.observableArrayList();
+//        tableData = FXCollections.observableArrayList();
+        tableData.clear();
         try (ObjectInputStream ois
                 = new ObjectInputStream(new FileInputStream(dataFile))) {
             while (true) {
                 tableData.add((Mark) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException ex) {
-            MainScreen.getMarkTableView().setItems(tableData);
+//            MainScreen.getMarkTableView().setItems(tableData);
             highlightMarks(TextAreaController.getCurrentSentence());
         }
     }
@@ -77,11 +80,9 @@ public class TableViewController {
     public static void clearSelections() {
         MainScreen.getMarkTableView().getSelectionModel().clearSelection();
     }
-    
-    public static void refreshTableView(){
-        MainScreen.getMarkTableView().setItems(tableData);
-        MainScreen.getMarkTableView().getColumns().get(0).setVisible(false);
-        MainScreen.getMarkTableView().getColumns().get(0).setVisible(true);
+
+    public static void refreshTableView() {
+        MainScreen.getMarkTableView().refresh();
     }
 
     public static void highlightMarks(Sentence currSentence) {
@@ -98,13 +99,30 @@ public class TableViewController {
 
     public static boolean updateSelectedItem(List<String> errorTypes) {
         int selectedIndex = MainScreen.getMarkTableView().getSelectionModel().getSelectedIndex();
-        if(selectedIndex == -1){
+        if (selectedIndex == -1) {
             return false;
         }
         Mark currMark = tableData.get(selectedIndex);
         currMark.getError().setErrorTypes(errorTypes);
         refreshTableView();
         return true;
+    }
+
+    public static void attachTableView(TableView<Mark> tableView) {
+        tableData = FXCollections.observableArrayList();
+        tableView.setItems(tableData);
+    }
+
+    public static EventHandler<KeyEvent> getDeleteKeyEventHandler() {
+        return (KeyEvent keyEvent) -> {
+            if (keyEvent.getCode() == KeyCode.F1) {
+                int index = MainScreen.getMarkTableView()
+                        .getSelectionModel().getSelectedIndex();
+                tableData.remove(index);
+                highlightRows.remove((Integer)index);
+                refreshTableView();
+            }
+        };
     }
 
     public static Callback<TableView<Mark>, TableRow<Mark>> getRowFactory() {
@@ -125,6 +143,8 @@ public class TableViewController {
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 1) {
+                        Mark currMark = tableData.get(row.getIndex());
+                        TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
                         TextAreaController.highlightText(tableData.get(row.getIndex())
                                 .getError().getSegment());
                     }

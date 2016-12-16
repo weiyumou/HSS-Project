@@ -28,13 +28,14 @@ public class Mark implements Serializable {
     public SimpleStringProperty authoridProperty() {
         return new SimpleStringProperty(authorID);
     }
-
+    
     public SimpleStringProperty idInEssayProperty() {
-        return new SimpleStringProperty(sentence.getIdInEssay());
+        
+        return new SimpleStringProperty(String.valueOf(sentence.getIdInEssay()));
     }
 
     public SimpleStringProperty idInParagraphProperty() {
-        return new SimpleStringProperty(sentence.getIdInParagraph());
+        return new SimpleStringProperty(String.valueOf(sentence.getIdInParagraph()));
     }
 
     public SimpleStringProperty sentenceContentProperty() {

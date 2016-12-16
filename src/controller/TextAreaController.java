@@ -91,6 +91,11 @@ public class TextAreaController {
             displayEssay();
         }
     }
+    
+    public static void scrollTo(int sentenceNo){
+        currentSentenceNo = sentenceNo;
+        displayEssay();
+    }
 
     private static void displayEssay() {
         MainScreen.getPrevEssay().setText(currentEssay.getSegment(1, currentSentenceNo));

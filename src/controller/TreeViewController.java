@@ -20,6 +20,8 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javax.xml.stream.XMLOutputFactory;
@@ -103,16 +105,28 @@ public class TreeViewController {
                             currNode = currNode.getParent();
                         }
                         Collections.reverse(errorTypes);
-                        
+
                         boolean isItemSelected = TableViewController.updateSelectedItem(errorTypes);
-                        
-                        if(!isItemSelected){
+
+                        if (!isItemSelected) {
                             Error error = new Error(errorTypes, selectedText, "");
                             Mark mark = new Mark(TextAreaController.getAuthorID(),
-                            TextAreaController.getCurrentSentence(), error);
+                                    TextAreaController.getCurrentSentence(), error);
                             TableViewController.loadData(mark);
                         }
                     }
+                }
+            }
+        };
+    }
+
+    public static EventHandler<KeyEvent> getDeleteKeyEventHandler() {
+        return (KeyEvent keyEvent) -> {
+            if (keyEvent.getCode() == KeyCode.F1) {
+                TreeItem<String> currNode = MainScreen.getErrorTreeView()
+                        .getSelectionModel().getSelectedItem();
+                if(!currNode.getValue().equals(TRIGGER_STRING)){
+                    currNode.getParent().getChildren().remove(currNode);
                 }
             }
         };

@@ -29,6 +29,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -141,6 +143,10 @@ public class MainScreen extends Application {
                 errorSegmentCol, remarkCol);
 
         markTableView.setPrefHeight(200);
+        
+        TableViewController.attachTableView(markTableView);
+        
+        markTableView.setOnKeyReleased(TableViewController.getDeleteKeyEventHandler());
 
         return markTableView;
     }
@@ -256,6 +262,7 @@ public class MainScreen extends Application {
         errorTreeView = new TreeView<>(errorRootItem);
         errorTreeView.setEditable(true);
         errorTreeView.setCellFactory((TreeView<String> p) -> new TextFieldTreeCellImpl());
+        errorTreeView.setOnKeyReleased(TreeViewController.getDeleteKeyEventHandler());
         centerPane.add(errorTreeView, 1, 0, 1, 3);
 
         return centerPane;

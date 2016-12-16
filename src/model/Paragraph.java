@@ -50,8 +50,8 @@ public class Paragraph {
                 case '！':
                 case '？':
                     ++count;
-                    sentences.add(new Sentence(Integer.toString(numPrecedingSentences + count), 
-                        Integer.toString(count), content.substring(prev, i + 1)));
+                    sentences.add(new Sentence(numPrecedingSentences + count, 
+                        count, content.substring(prev, i + 1)));
                     prev = i + 1;
                     break;
                 default:

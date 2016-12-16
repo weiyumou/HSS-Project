@@ -13,30 +13,31 @@ import java.util.Objects;
  * @author weiyumou
  */
 public class Sentence implements Serializable {
-
-    private String idInEssay;
-    private String idInParagraph;
+    
+    private int idInEssay;
+    private int idInParagraph;
+    
     private String content;
-
-    public Sentence(String idInEssay, String idInParagraph, String content) {
+    
+    public Sentence(int idInEssay, int idInParagraph, String content) {
         this.idInEssay = idInEssay;
         this.idInParagraph = idInParagraph;
         this.content = content;
     }
 
-    public String getIdInEssay() {
+    public int getIdInEssay() {
         return idInEssay;
     }
 
-    public void setIdInEssay(String idInEssay) {
+    public void setIdInEssay(int idInEssay) {
         this.idInEssay = idInEssay;
     }
 
-    public String getIdInParagraph() {
+    public int getIdInParagraph() {
         return idInParagraph;
     }
 
-    public void setIdInParagraph(String idInParagraph) {
+    public void setIdInParagraph(int idInParagraph) {
         this.idInParagraph = idInParagraph;
     }
 
@@ -63,12 +64,10 @@ public class Sentence implements Serializable {
         }
         final Sentence other = (Sentence) obj;
 
-        if ((this.getIdInEssay() == null) ? (other.getIdInEssay() != null)
-                : !this.getIdInEssay().equals(other.getIdInEssay())) {
+        if(this.getIdInEssay() != other.getIdInEssay()) {
             return false;
         }
-        if ((this.getIdInParagraph() == null) ? (other.getIdInParagraph() != null)
-                : !this.getIdInParagraph().equals(other.getIdInParagraph())) {
+        if(this.getIdInParagraph() != (other.getIdInParagraph())) {
             return false;
         }
         return !((this.getContent() == null) ? (other.getContent() != null)
