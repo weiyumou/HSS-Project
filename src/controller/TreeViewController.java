@@ -103,11 +103,15 @@ public class TreeViewController {
                             currNode = currNode.getParent();
                         }
                         Collections.reverse(errorTypes);
-
-                        Error error = new Error(errorTypes, selectedText, "");
-                        Mark mark = new Mark(TextAreaController.getAuthorID(),
-                                TextAreaController.getCurrentSentence(), error);
-                        TableViewController.loadData(mark);
+                        
+                        boolean isItemSelected = TableViewController.updateSelectedItem(errorTypes);
+                        
+                        if(!isItemSelected){
+                            Error error = new Error(errorTypes, selectedText, "");
+                            Mark mark = new Mark(TextAreaController.getAuthorID(),
+                            TextAreaController.getCurrentSentence(), error);
+                            TableViewController.loadData(mark);
+                        }
                     }
                 }
             }

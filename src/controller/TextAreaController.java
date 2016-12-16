@@ -26,88 +26,89 @@ import view.MainScreen;
  * @author weiyumou
  */
 public class TextAreaController {
-    
+
     private static Essay currentEssay;
     private static int currentSentenceNo;
     private static Sentence currentSentence;
-    
+
     //Textfield on focus
-    public static ChangeListener<Boolean> getChangeListener(){
-        return (ObservableValue<? extends Boolean> arg0, 
-            Boolean oldPropertyValue, Boolean newPropertyValue) -> {
-            if (newPropertyValue){
+    public static ChangeListener<Boolean> getChangeListener() {
+        return (ObservableValue<? extends Boolean> arg0,
+                Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (newPropertyValue) {
                 TreeViewController.clearSelections();
                 TableViewController.clearSelections();
+                System.out.println(MainScreen.getMarkTableView().getSelectionModel().getSelectedIndex());
             }
         };
     }
-    
-    public static void readEssay(String path){
+
+    public static void readEssay(String path) {
         List<String> lines;
-        try(BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
+        try (BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
             lines = br.lines().collect(Collectors.toList());
             currentEssay = new Essay(lines);
-            ToolbarController.adjustEssayDisplay(currentEssay.getTitle(), 
-                currentEssay.getAuthorID());
+            ToolbarController.adjustEssayDisplay(currentEssay.getTitle(),
+                    currentEssay.getAuthorID());
             MainScreenController.enableViewAuthorInfo();
             currentSentenceNo = 1;
             displayEssay();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-	}
+        }
     }
 
-    public static EventHandler<ScrollEvent> getScrollEventHandler(){
+    public static EventHandler<ScrollEvent> getScrollEventHandler() {
         return (ScrollEvent event) -> {
-            if(event.getDeltaY() < 0){ //up
+            if (event.getDeltaY() < 0) { //up
                 scrollup();
-            }else if(event.getDeltaY() > 0){ //down
+            } else if (event.getDeltaY() > 0) { //down
                 scrolldown();
             }
         };
     }
 
-    public static EventHandler<KeyEvent> getScrollKeyEventHandler(){
+    public static EventHandler<KeyEvent> getScrollKeyEventHandler() {
         return (KeyEvent event) -> {
-            if(event.getCode() == KeyCode.UP){
+            if (event.getCode() == KeyCode.UP) {
                 scrolldown();
-            }else if(event.getCode() == KeyCode.DOWN){
+            } else if (event.getCode() == KeyCode.DOWN) {
                 scrollup();
             }
         };
     }
-    
-    private static void scrollup(){
-        if(currentSentenceNo < currentEssay.getNumOfSentences()){
+
+    private static void scrollup() {
+        if (currentSentenceNo < currentEssay.getNumOfSentences()) {
             ++currentSentenceNo;
             displayEssay();
         }
     }
-    
-    private static void scrolldown(){
-       if(currentSentenceNo > 1){
+
+    private static void scrolldown() {
+        if (currentSentenceNo > 1) {
             --currentSentenceNo;
             displayEssay();
         }
     }
-    
-    private static void displayEssay(){
+
+    private static void displayEssay() {
         MainScreen.getPrevEssay().setText(currentEssay.getSegment(1, currentSentenceNo));
         MainScreen.getPrevEssay().setScrollTop(Double.MAX_VALUE);
         currentSentence = currentEssay.getSingleSentence(currentSentenceNo);
         MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
-        
+
         TableViewController.highlightMarks(currentSentence);
     }
-    
-    public static String getAuthorID(){
+
+    public static String getAuthorID() {
         return currentEssay.getAuthorID();
     }
-    
-    public static String getEssayTitle(){
-        if(currentEssay == null){
+
+    public static String getEssayTitle() {
+        if (currentEssay == null) {
             return "";
         }
         return currentEssay.getTitle();
@@ -116,5 +117,13 @@ public class TextAreaController {
     public static Sentence getCurrentSentence() {
         return currentSentence;
     }
-    
+
+    public static void highlightText(String segment) {
+        MainScreen.getCurrEssay().selectRange(0, 0);
+        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
+        if (start != -1) {
+            MainScreen.getCurrEssay().selectRange(start, start + segment.length());
+        }
+    }
+
 }

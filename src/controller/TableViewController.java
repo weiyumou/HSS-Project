@@ -12,15 +12,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
+import model.Error;
 import view.MainScreen;
 
 /**
@@ -37,7 +41,8 @@ public class TableViewController {
         if (!tableData.contains(mark)) {
             tableData.add(mark);
             highlightRows.add(tableData.size() - 1);
-            MainScreen.getMarkTableView().setItems(tableData);
+//            MainScreen.getMarkTableView().setItems(tableData);
+            MainScreen.getMarkTableView().scrollTo(Integer.MAX_VALUE);
         }
     }
 
@@ -71,19 +76,35 @@ public class TableViewController {
 
     public static void clearSelections() {
         MainScreen.getMarkTableView().getSelectionModel().clearSelection();
-
     }
     
-    public static void highlightMarks(Sentence currSentence){
+    public static void refreshTableView(){
+        MainScreen.getMarkTableView().setItems(tableData);
+        MainScreen.getMarkTableView().getColumns().get(0).setVisible(false);
+        MainScreen.getMarkTableView().getColumns().get(0).setVisible(true);
+    }
+
+    public static void highlightMarks(Sentence currSentence) {
         highlightRows.clear();
-        for(int i = 0; i != tableData.size(); ++i){
-            if(tableData.get(i).getSentence().equals(currSentence)){
+        for (int i = 0; i != tableData.size(); ++i) {
+            if (tableData.get(i).getSentence().equals(currSentence)) {
                 highlightRows.add(i);
             }
         }
-        if(!highlightRows.isEmpty()){
+        if (!highlightRows.isEmpty()) {
             MainScreen.getMarkTableView().scrollTo(highlightRows.get(0));
         }
+    }
+
+    public static boolean updateSelectedItem(List<String> errorTypes) {
+        int selectedIndex = MainScreen.getMarkTableView().getSelectionModel().getSelectedIndex();
+        if(selectedIndex == -1){
+            return false;
+        }
+        Mark currMark = tableData.get(selectedIndex);
+        currMark.getError().setErrorTypes(errorTypes);
+        refreshTableView();
+        return true;
     }
 
     public static Callback<TableView<Mark>, TableRow<Mark>> getRowFactory() {
@@ -101,6 +122,14 @@ public class TableViewController {
                     }
                 }
             };
+            row.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    if (mouseEvent.getClickCount() == 1) {
+                        TextAreaController.highlightText(tableData.get(row.getIndex())
+                                .getError().getSegment());
+                    }
+                }
+            });
             highlightRows.addListener(new ListChangeListener<Integer>() {
                 @Override
                 public void onChanged(Change<? extends Integer> change) {
@@ -111,6 +140,12 @@ public class TableViewController {
                     } else {
                         row.getStyleClass().removeAll(Collections.singleton("highlightedRow"));
                     }
+                }
+            });
+            tableData.addListener(new ListChangeListener<Mark>() {
+                @Override
+                public void onChanged(ListChangeListener.Change<? extends Mark> change) {
+                    refreshTableView();
                 }
             });
             return row;
