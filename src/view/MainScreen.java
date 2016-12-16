@@ -6,6 +6,7 @@
 package view;
 
 import controller.MainScreenController;
+import controller.TableViewController;
 import controller.TextAreaController;
 import controller.ToolbarController;
 import controller.TreeViewController;
@@ -24,6 +25,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -47,7 +49,7 @@ import model.TextFieldTreeCellImpl;
 public class MainScreen extends Application {
 
     private static FileChooser openFileChooser;
-    private static FileChooser saveFileChooser;
+//    private static FileChooser saveFileChooser;
     private static TreeView<String> errorTreeView;
     private static TableView<Mark> markTableView;
     private static TextArea prevEssay;
@@ -82,6 +84,7 @@ public class MainScreen extends Application {
 
         markTableView = new TableView<>();
         markTableView.setPlaceholder(new Label("没有数据"));
+        markTableView.setRowFactory(TableViewController.getRowFactory());
 
         TableColumn authorIDCol = new TableColumn("作者序号");
         authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
@@ -159,6 +162,7 @@ public class MainScreen extends Application {
         final Button logoutButton = new Button();
         logoutButton.setGraphic(new ImageView("file:src/img/glyphicons-388-log-out.png"));
         logoutButton.setOnAction(MainScreenController.getLogoutEventHandler());
+        logoutButton.setTooltip(new Tooltip("注销"));
 
         usernameLabel = new Label("当前用户: ");
         usercategoryLabel = new Label("类别: ");
@@ -294,13 +298,13 @@ public class MainScreen extends Application {
         openFileChooser = fileChooser;
     }
 
-    public static FileChooser getSaveFileChooser() {
-        return saveFileChooser;
-    }
-
-    public static void setSaveFileChooser(FileChooser saveFileChooser) {
-        MainScreen.saveFileChooser = saveFileChooser;
-    }
+//    public static FileChooser getSaveFileChooser() {
+//        return saveFileChooser;
+//    }
+//
+//    public static void setSaveFileChooser(FileChooser saveFileChooser) {
+//        MainScreen.saveFileChooser = saveFileChooser;
+//    }
 
     public static Parent buildUI() {
         return initialiseUI();

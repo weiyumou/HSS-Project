@@ -43,13 +43,14 @@ public class MainScreenController {
         currentStage = new Stage();
         
         FileChooser openFileChooser = new FileChooser();
-        FileChooser saveFileChooser = new FileChooser();
+//        FileChooser saveFileChooser = new FileChooser();
         configureOpenFileChooser(openFileChooser);
-        configureSaveFileChooser(saveFileChooser);
+//        configureSaveFileChooser(saveFileChooser);
         MainScreen.setOpenFileChooser(openFileChooser);
-        MainScreen.setSaveFileChooser(saveFileChooser);
+//        MainScreen.setSaveFileChooser(saveFileChooser);
         
         Scene scene = new Scene(MainScreen.buildUI(), 1280, 720);
+        scene.getStylesheets().add("file:src/css/stylesheet.css");
         ToolbarController.adjustUserDisplay(user, userType);
         
         currentStage.setTitle("作文标注");
@@ -65,14 +66,14 @@ public class MainScreenController {
         );
     }
     
-    private static void configureSaveFileChooser(FileChooser fileChooser) {      
-        fileChooser.setTitle("保存标注");
-        fileChooser.setInitialDirectory(new File("src/essay"));
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("DAT", "*.dat")
-        );
-//        fileChooser.setInitialFileName(TextAreaController.getEssayTitle() + ".dat");
-    }
+//    private static void configureSaveFileChooser(FileChooser fileChooser) {      
+//        fileChooser.setTitle("保存标注");
+//        fileChooser.setInitialDirectory(new File("src/essay"));
+//        fileChooser.getExtensionFilters().addAll(
+//            new FileChooser.ExtensionFilter("DAT", "*.dat")
+//        );
+////        fileChooser.setInitialFileName(TextAreaController.getEssayTitle() + ".dat");
+//    }
     
     public static EventHandler<ActionEvent> getLogoutEventHandler(){
         return (ActionEvent e) -> {
@@ -84,9 +85,9 @@ public class MainScreenController {
         return MainScreen.getOpenFileChooser().showOpenDialog(currentStage);
     }
     
-    public static File showSaveFileChooser() {
-        return MainScreen.getSaveFileChooser().showOpenDialog(currentStage);
-    }
+//    public static File showSaveFileChooser() {
+//        return MainScreen.getSaveFileChooser().showOpenDialog(currentStage);
+//    }
 
     public static String getUser() {
         return user;

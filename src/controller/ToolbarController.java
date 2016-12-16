@@ -6,13 +6,14 @@
 package controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import javafx.collections.ObservableList;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import model.Mark;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 import view.MainScreen;
 
 /**
@@ -29,11 +30,13 @@ public class ToolbarController {
                 String datPath = file.getPath().replace(".txt", ".dat");
                 File datFile = new File(datPath);
                 if(datFile.exists() && !datFile.isDirectory()){
-                    TableViewController.load(datFile);
+                    TableViewController.setDataFile(datFile);
+                    TableViewController.load();
                 }else{
                     datFile.getParentFile().mkdirs();
                     try {
                         datFile.createNewFile();
+                        TableViewController.setDataFile(datFile);
                     } catch (IOException ex) {
                         System.out.println(ex.getMessage());
                     }
@@ -44,10 +47,15 @@ public class ToolbarController {
 
     public static EventHandler<ActionEvent> saveFileEventHandler() {
         return (ActionEvent event) -> {
-            File file = MainScreenController.showSaveFileChooser();
-            if (file != null) {
-                TableViewController.dump(file.getPath());
-            }
+//            File file = MainScreenController.showSaveFileChooser();
+//            if (file != null) {
+                TableViewController.dump();
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("提示");
+                alert.setHeaderText(null);
+                alert.setContentText("已保存");
+                alert.showAndWait();
+//            }
         };
     }
 

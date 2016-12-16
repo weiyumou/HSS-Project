@@ -31,12 +31,13 @@ public class TextAreaController {
     private static int currentSentenceNo;
     private static Sentence currentSentence;
     
+    //Textfield on focus
     public static ChangeListener<Boolean> getChangeListener(){
         return (ObservableValue<? extends Boolean> arg0, 
             Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (newPropertyValue){
-//                System.out.println("Textfield on focus");
                 TreeViewController.clearSelections();
+                TableViewController.clearSelections();
             }
         };
     }
@@ -97,6 +98,8 @@ public class TextAreaController {
         MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
+        
+        TableViewController.highlightMarks(currentSentence);
     }
     
     public static String getAuthorID(){

@@ -5,10 +5,9 @@
  */
 package model;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -19,7 +18,9 @@ import javafx.scene.input.KeyEvent;
  */
 public class EditingCell extends TableCell<Mark, String> {
 
-    private TextField textField;
+//    private TextField textField;
+    
+    private TextArea textField;
 
     public EditingCell() {
     }
@@ -34,6 +35,8 @@ public class EditingCell extends TableCell<Mark, String> {
         setGraphic(textField);
         textField.selectAll();
         textField.requestFocus();
+        textField.setWrapText(true);
+        textField.setPrefHeight(30);
         setVisible(false);
     }
 
@@ -67,7 +70,8 @@ public class EditingCell extends TableCell<Mark, String> {
     }
 
     private void createTextField() {
-        textField = new TextField(getString());
+//        textField = new TextField(getString());
+        textField = new TextArea(getString());
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> 
             arg0, Boolean arg1, Boolean arg2) -> {
