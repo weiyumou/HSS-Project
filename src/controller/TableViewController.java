@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -24,9 +26,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import view.MainScreen;
 
 /**
@@ -38,6 +42,8 @@ public class TableViewController {
     private static ObservableList<Mark> tableData;
     private static final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
     private static File dataFile;
+    private static File excelFile;
+//    private static HSSFWorkbook excelWorkbook;
 
     public static void loadData(Mark mark) {
         if (!tableData.contains(mark)) {
@@ -75,6 +81,11 @@ public class TableViewController {
 
     public static void setDataFile(File dataFile) {
         TableViewController.dataFile = dataFile;
+    }
+
+    public static void setExcelFile(File excelFile) {
+        
+        TableViewController.excelFile = excelFile;
     }
 
     public static void clearSelections() {
@@ -115,7 +126,7 @@ public class TableViewController {
 
     public static EventHandler<KeyEvent> getDeleteKeyEventHandler() {
         return (KeyEvent keyEvent) -> {
-            if (keyEvent.getCode() == KeyCode.F1) {
+            if (keyEvent.getCode() == KeyCode.DELETE) {
                 int index = MainScreen.getMarkTableView()
                         .getSelectionModel().getSelectedIndex();
                 tableData.remove(index);
@@ -170,5 +181,25 @@ public class TableViewController {
             });
             return row;
         };
+    }
+    
+    public static void dumpToExcel(){
+        final String[] colNames = MainScreen.getTableColNames();
+//        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter
+//            (new FileOutputStream(excelFile.getPath()),"UTF8"));) {
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter
+            (new FileOutputStream(excelFile.getPath()),"UTF8"));) {
+
+            int i;
+            for(i = 0;i != colNames.length - 1; ++i){
+                w.print(colNames[i] + ",");
+            }
+            w.print(colNames[i] + "\n");
+            for(Mark item : tableData){
+                w.print(item.toString() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

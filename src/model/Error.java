@@ -74,6 +74,15 @@ public class Error implements Serializable{
         hash = 89 * hash + Objects.hashCode(this.segment);
         return hash;
     }
+
+    @Override
+    public String toString() {
+        String res = "";
+        for(String error : errorTypes){
+            res += error + ",";
+        }
+        return res + segment + "," + remark;
+    }
     
    
 }

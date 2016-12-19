@@ -6,6 +6,7 @@
 package controller;
 
 import java.io.File;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -43,11 +44,11 @@ public class MainScreenController {
         currentStage = new Stage();
         
         FileChooser openFileChooser = new FileChooser();
-//        FileChooser saveFileChooser = new FileChooser();
+        FileChooser saveFileChooser = new FileChooser();
         configureOpenFileChooser(openFileChooser);
-//        configureSaveFileChooser(saveFileChooser);
+        configureSaveFileChooser(saveFileChooser);
         MainScreen.setOpenFileChooser(openFileChooser);
-//        MainScreen.setSaveFileChooser(saveFileChooser);
+        MainScreen.setSaveFileChooser(saveFileChooser);
         
         Scene scene = new Scene(MainScreen.buildUI(), 1280, 720);
         scene.getStylesheets().add("file:src/css/stylesheet.css");
@@ -61,19 +62,20 @@ public class MainScreenController {
     private static void configureOpenFileChooser(FileChooser fileChooser) {      
         fileChooser.setTitle("打开作文");
         fileChooser.setInitialDirectory(new File("src/essay"));
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("TXT", "*.txt")
-        );
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DAT", "*.dat"));
+        if(isAdmin()){
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
+        }
     }
     
-//    private static void configureSaveFileChooser(FileChooser fileChooser) {      
-//        fileChooser.setTitle("保存标注");
-//        fileChooser.setInitialDirectory(new File("src/essay"));
-//        fileChooser.getExtensionFilters().addAll(
-//            new FileChooser.ExtensionFilter("DAT", "*.dat")
-//        );
-////        fileChooser.setInitialFileName(TextAreaController.getEssayTitle() + ".dat");
-//    }
+    private static void configureSaveFileChooser(FileChooser fileChooser) {      
+        fileChooser.setTitle("保存标注至Excel");
+        fileChooser.setInitialDirectory(new File("src/essay"));
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("CSV", "*.csv")
+        );
+//        fileChooser.setInitialFileName(TextAreaController.getEssayTitle() + ".dat");
+    }
     
     public static EventHandler<ActionEvent> getLogoutEventHandler(){
         return (ActionEvent e) -> {
@@ -81,13 +83,13 @@ public class MainScreenController {
         };
     }
     
-    public static File showOpenFileChooser() {
-        return MainScreen.getOpenFileChooser().showOpenDialog(currentStage);
+    public static List<File> showOpenFileChooser() {
+        return MainScreen.getOpenFileChooser().showOpenMultipleDialog(currentStage);
     }
     
-//    public static File showSaveFileChooser() {
-//        return MainScreen.getSaveFileChooser().showOpenDialog(currentStage);
-//    }
+    public static File showSaveFileChooser() {
+        return MainScreen.getSaveFileChooser().showOpenDialog(currentStage);
+    }
 
     public static String getUser() {
         return user;
@@ -97,9 +99,26 @@ public class MainScreenController {
         return userType;
     }
     
+    public static boolean isAdmin(){
+        return userType.equals("管理员");
+    }
+    
     public static void enableViewAuthorInfo(){
-        if(userType.equals("管理员")){
+        if(isAdmin()){
             MainScreen.getAuthorinfoButton().setDisable(false);
+            MainScreen.getAuthorIDLabel().setVisible(true);
+        }
+    }
+    
+    public static void enableSaveButton(){
+        
+        MainScreen.getSaveButton().setDisable(false);
+
+    }
+    
+    public static void enableSaveToExcelButton(){
+        if(isAdmin()){
+            MainScreen.getSaveToExcelButton().setDisable(false);
         }
     }
 }

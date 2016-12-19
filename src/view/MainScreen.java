@@ -17,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -29,8 +30,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -51,7 +50,7 @@ import model.TextFieldTreeCellImpl;
 public class MainScreen extends Application {
 
     private static FileChooser openFileChooser;
-//    private static FileChooser saveFileChooser;
+    private static FileChooser saveFileChooser;
     private static TreeView<String> errorTreeView;
     private static TableView<Mark> markTableView;
     private static TextArea prevEssay;
@@ -63,6 +62,15 @@ public class MainScreen extends Application {
     private static Button authorinfoButton;
     private static Label titleLabel;
     private static Label authorIDLabel;
+    
+    private static Button saveToExcelButton;
+    private static Button saveButton;
+    
+    private static final String[] tableColNames = {
+        "作者序号", "句子序号", "句子在段落中序号", 
+        "句子", "错误类型", "具体错误类型", 
+        "病句及句子成分错误类型", "错误所在片段", "备注"
+    };
 
     @Override
     public void start(Stage primaryStage) {
@@ -88,40 +96,40 @@ public class MainScreen extends Application {
         markTableView.setPlaceholder(new Label("没有数据"));
         markTableView.setRowFactory(TableViewController.getRowFactory());
 
-        TableColumn authorIDCol = new TableColumn("作者序号");
+        TableColumn authorIDCol = new TableColumn(tableColNames[0]);
         authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
         authorIDCol.setCellValueFactory(new PropertyValueFactory<>("authorid"));
 
-        TableColumn idInEssayCol = new TableColumn("句子序号");
+        TableColumn idInEssayCol = new TableColumn(tableColNames[1]);
         idInEssayCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
         idInEssayCol.setCellValueFactory(new PropertyValueFactory<>("idInEssay"));
 
-        TableColumn idInParaCol = new TableColumn("句子在段落中序号");
+        TableColumn idInParaCol = new TableColumn(tableColNames[2]);
         idInParaCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         idInParaCol.setCellValueFactory(new PropertyValueFactory<>("idInParagraph"));
 
-        TableColumn contentCol = new TableColumn("句子");
+        TableColumn contentCol = new TableColumn(tableColNames[3]);
         contentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         contentCol.setCellValueFactory(new PropertyValueFactory<>("sentenceContent"));
 
-        TableColumn typeIErrorCol = new TableColumn("错误类型");
+        TableColumn typeIErrorCol = new TableColumn(tableColNames[4]);
         typeIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIError"));
 
-        TableColumn typeIIErrorCol = new TableColumn("具体错误类型");
+        TableColumn typeIIErrorCol = new TableColumn(tableColNames[5]);
         typeIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIError"));
 
-        TableColumn typeIIIErrorCol = new TableColumn("病句及句子成分错误类型");
+        TableColumn typeIIIErrorCol = new TableColumn(tableColNames[6]);
         typeIIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIIError"));
 
-        TableColumn errorSegmentCol = new TableColumn("错误所在片段");
+        TableColumn errorSegmentCol = new TableColumn(tableColNames[7]);
         errorSegmentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         errorSegmentCol.setCellValueFactory(new PropertyValueFactory<>("errorSegment"));
 
         Callback<TableColumn, TableCell> cellFactory = (TableColumn p) -> new EditingCell();
-        TableColumn remarkCol = new TableColumn("备注");
+        TableColumn remarkCol = new TableColumn(tableColNames[8]);
         remarkCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol / 2.0));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
         remarkCol.setCellFactory(cellFactory);
@@ -143,9 +151,9 @@ public class MainScreen extends Application {
                 errorSegmentCol, remarkCol);
 
         markTableView.setPrefHeight(200);
-        
+
         TableViewController.attachTableView(markTableView);
-        
+
         markTableView.setOnKeyReleased(TableViewController.getDeleteKeyEventHandler());
 
         return markTableView;
@@ -155,14 +163,20 @@ public class MainScreen extends Application {
         final Button openButton = new Button("打开");
         openButton.setGraphic(new ImageView("file:src/img/glyphicons-145-folder-open.png"));
         openButton.setPrefWidth(80);
-        openButton.setOnAction(ToolbarController.openFileEventHandler());
+        openButton.setOnAction(ToolbarController.getOpenFileEventHandler());
 
-        final Button saveButton = new Button("保存");
+        saveButton = new Button("保存批注");
         saveButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
-        saveButton.setPrefWidth(80);
-        saveButton.setOnAction(ToolbarController.saveFileEventHandler());
+        saveButton.setPrefWidth(100);
+        saveButton.setOnAction(ToolbarController.getSaveFileEventHandler());
+        saveButton.setDisable(true);
 
-//        final Button left2 = new Button( "left2 button" );
+        saveToExcelButton = new Button("保存到Excel");
+        saveToExcelButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
+        saveToExcelButton.setPrefWidth(120);
+        saveToExcelButton.setDisable(true);
+        saveToExcelButton.setOnAction(ToolbarController.getSaveToExcelEventHandler());
+        
 //        final Button userAccountButton = new Button();
 //        userAccountButton.setGraphic(new ImageView("file:src/img/glyphicons-4-user.png"));
         final Button logoutButton = new Button();
@@ -177,6 +191,7 @@ public class MainScreen extends Application {
 //        final Button right3 = new Button( "right3 button" );
         titleLabel = new Label("当前文章: ");
         authorIDLabel = new Label("作者序号: ");
+        authorIDLabel.setVisible(false);
         ToolbarController.resetEssayDisplay();
 
         authorinfoButton = new Button("查看作者信息");
@@ -189,7 +204,7 @@ public class MainScreen extends Application {
      * (try resizing the window to something small).
          */
         final ToolBar toolBar = new ToolBar();
-        final HBox leftSection = new HBox(openButton, saveButton);
+        final HBox leftSection = new HBox(openButton, saveButton, saveToExcelButton);
         final HBox centerSection = new HBox(titleLabel, authorIDLabel, authorinfoButton);
         final HBox rightSection = new HBox(usernameLabel, usercategoryLabel, logoutButton);
 
@@ -239,6 +254,18 @@ public class MainScreen extends Application {
         prevEssay = new TextArea();
         currEssay = new TextArea();
         nextEssay = new TextArea();
+
+        prevEssay.setStyle("-fx-font-size: 20px;");
+        currEssay.setStyle("-fx-font-size: 20px;");
+        nextEssay.setStyle("-fx-font-size: 20px;");
+
+        prevEssay.setContextMenu(new ContextMenu());
+        currEssay.setContextMenu(new ContextMenu());
+        nextEssay.setContextMenu(new ContextMenu());
+
+        prevEssay.setOnKeyPressed(TextAreaController.getNoCopyKeyEventHandler());
+        currEssay.setOnKeyPressed(TextAreaController.getNoCopyKeyEventHandler());
+        currEssay.setOnKeyPressed(TextAreaController.getNoCopyKeyEventHandler());
 
         prevEssay.setOpacity(0.5);
         prevEssay.setEditable(false);
@@ -305,14 +332,13 @@ public class MainScreen extends Application {
         openFileChooser = fileChooser;
     }
 
-//    public static FileChooser getSaveFileChooser() {
-//        return saveFileChooser;
-//    }
-//
-//    public static void setSaveFileChooser(FileChooser saveFileChooser) {
-//        MainScreen.saveFileChooser = saveFileChooser;
-//    }
+    public static FileChooser getSaveFileChooser() {
+        return saveFileChooser;
+    }
 
+    public static void setSaveFileChooser(FileChooser saveFileChooser) {
+        MainScreen.saveFileChooser = saveFileChooser;
+    }
     public static Parent buildUI() {
         return initialiseUI();
     }
@@ -349,4 +375,19 @@ public class MainScreen extends Application {
         return markTableView;
     }
 
+    public static Button getSaveToExcelButton() {
+        return saveToExcelButton;
+    }
+
+    public static Button getSaveButton() {
+        return saveButton;
+    } 
+
+    public static String[] getTableColNames() {
+        return tableColNames;
+    }
+
+    public static Label getAuthorIDLabel() {
+        return authorIDLabel;
+    }
 }

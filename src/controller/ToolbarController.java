@@ -8,6 +8,7 @@ package controller;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,30 +23,38 @@ import view.MainScreen;
  */
 public class ToolbarController {
 
-    public static EventHandler<ActionEvent> openFileEventHandler() {
+    public static EventHandler<ActionEvent> getOpenFileEventHandler() {
         return (ActionEvent event) -> {
-            File file = MainScreenController.showOpenFileChooser();
-            if (file != null) {
-                TextAreaController.readEssay(file.getPath());
-                String datPath = file.getPath().replace(".txt", ".dat");
-                File datFile = new File(datPath);
-                if(datFile.exists() && !datFile.isDirectory()){
-                    TableViewController.setDataFile(datFile);
-                    TableViewController.load();
-                }else{
-                    datFile.getParentFile().mkdirs();
-                    try {
-                        datFile.createNewFile();
-                        TableViewController.setDataFile(datFile);
-                    } catch (IOException ex) {
-                        System.out.println(ex.getMessage());
-                    }
+            List<File> files = MainScreenController.showOpenFileChooser();
+            if (files != null) {
+                File firstFile = files.get(0);
+                String fileName = firstFile.getName();
+                String extension = "";
+                
+                int i = fileName.lastIndexOf('.');
+                if (i > 0) {
+                    extension = fileName.substring(i+1);
                 }
+                
+                if(extension.equals("dat")){
+                    TextAreaController.readDatEssay(firstFile);
+                    String markPath = firstFile.getPath().replace(".dat", ".mak");
+                    String excelPath = firstFile.getPath().replace(".dat", ".csv");
+                    File markFile = new File(markPath);
+                    File excelFile = new File(excelPath);
+                    TableViewController.setDataFile(markFile);
+                    TableViewController.setExcelFile(excelFile);
+                    if(markFile.exists() && !markFile.isDirectory()){
+                        TableViewController.load();
+                    }
+                }else if(extension.equals("txt")){
+                    TextAreaController.convertToDAT(files);
+                }             
             }
         };
     }
 
-    public static EventHandler<ActionEvent> saveFileEventHandler() {
+    public static EventHandler<ActionEvent> getSaveFileEventHandler() {
         return (ActionEvent event) -> {
 //            File file = MainScreenController.showSaveFileChooser();
 //            if (file != null) {
@@ -56,6 +65,13 @@ public class ToolbarController {
                 alert.setContentText("已保存");
                 alert.showAndWait();
 //            }
+        };
+    }
+    
+    public static EventHandler<ActionEvent> getSaveToExcelEventHandler(){
+        return (ActionEvent event) -> {
+//            File file = MainScreenController.showSaveFileChooser();
+            TableViewController.dumpToExcel();
         };
     }
 

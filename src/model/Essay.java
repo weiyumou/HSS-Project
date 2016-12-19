@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author weiyumou
  */
-public class Essay {
+public class Essay implements Serializable{
     private String title;
     private String authorID;
     private List<Paragraph> paragraphs;

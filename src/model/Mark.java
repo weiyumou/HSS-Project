@@ -130,4 +130,10 @@ public class Mark implements Serializable {
         hash = 73 * hash + Objects.hashCode(this.authorID);
         return hash;
     }
+
+    @Override
+    public String toString() {
+        return authorID + "," + sentence.getRepString() + "," + error.toString();
+    }
+    
 }

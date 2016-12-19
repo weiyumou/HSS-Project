@@ -82,4 +82,8 @@ public class Sentence implements Serializable {
         hash = 37 * hash + Objects.hashCode(this.content);
         return hash;
     }
+    
+    public String getRepString(){
+        return idInEssay + "," + idInParagraph + "," + content;
+    }
 }

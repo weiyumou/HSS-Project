@@ -122,7 +122,7 @@ public class TreeViewController {
 
     public static EventHandler<KeyEvent> getDeleteKeyEventHandler() {
         return (KeyEvent keyEvent) -> {
-            if (keyEvent.getCode() == KeyCode.F1) {
+            if (keyEvent.getCode() == KeyCode.DELETE && MainScreenController.isAdmin()) {
                 TreeItem<String> currNode = MainScreen.getErrorTreeView()
                         .getSelectionModel().getSelectedItem();
                 if(!currNode.getValue().equals(TRIGGER_STRING)){

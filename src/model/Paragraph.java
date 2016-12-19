@@ -7,6 +7,7 @@ package model;
 
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author weiyumou
  */
-public class Paragraph {
+public class Paragraph implements Serializable{
     private String content;
     private List<Sentence> sentences;
     private int numPrecedingSentences;

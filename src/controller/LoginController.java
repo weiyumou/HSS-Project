@@ -61,8 +61,21 @@ public class LoginController {
     }
     
     private static Tuple<Boolean,String> authenticate(String username, String password){
-        String userType = "管理员";
-        boolean auth_res = username.equals("weiyumou") && password.equals("weiyumou");
+        String userType = "";
+        boolean auth_res = false;
+        if(username.equals("weiyumou") && password.equals("weiyumou")){
+            userType = "管理员";
+            auth_res = true;
+        }else if(username.equals("user1") && password.equals("user1")){
+            userType = "普通用户";
+            auth_res = true;
+        }else if(username.equals("user2") && password.equals("user2")){
+            userType = "普通用户";
+            auth_res = true;
+        }else if(username.equals("user3") && password.equals("user3")){
+            userType = "普通用户";
+            auth_res = true;
+        }
         return new Tuple(auth_res, userType);
     }
     
