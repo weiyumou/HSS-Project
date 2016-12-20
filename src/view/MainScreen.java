@@ -29,6 +29,7 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -161,34 +162,38 @@ public class MainScreen extends Application {
 
     private static Node initialiseToolBar() {
         final Button openButton = new Button("打开");
-        openButton.setGraphic(new ImageView("file:src/img/glyphicons-145-folder-open.png"));
+        openButton.setGraphic(new ImageView(
+                new Image(MainScreen.class.getResourceAsStream(
+                "/resources/img/glyphicons-145-folder-open.png"))));
         openButton.setPrefWidth(80);
         openButton.setOnAction(ToolbarController.getOpenFileEventHandler());
 
         saveButton = new Button("保存批注");
-        saveButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
+        saveButton.setGraphic(new ImageView(
+                new Image(MainScreen.class.getResourceAsStream(
+                "/resources/img/glyphicons-447-floppy-save.png"))));
         saveButton.setPrefWidth(100);
         saveButton.setOnAction(ToolbarController.getSaveFileEventHandler());
         saveButton.setDisable(true);
 
         saveToExcelButton = new Button("保存到Excel");
-        saveToExcelButton.setGraphic(new ImageView("file:src/img/glyphicons-447-floppy-save.png"));
+        saveToExcelButton.setGraphic(new ImageView(
+                new Image(MainScreen.class.getResourceAsStream(
+                "/resources/img/glyphicons-447-floppy-save.png"))));
         saveToExcelButton.setPrefWidth(120);
         saveToExcelButton.setDisable(true);
         saveToExcelButton.setOnAction(ToolbarController.getSaveToExcelEventHandler());
         
-//        final Button userAccountButton = new Button();
-//        userAccountButton.setGraphic(new ImageView("file:src/img/glyphicons-4-user.png"));
         final Button logoutButton = new Button();
-        logoutButton.setGraphic(new ImageView("file:src/img/glyphicons-388-log-out.png"));
+        logoutButton.setGraphic(new ImageView(
+                new Image(MainScreen.class.getResourceAsStream(
+                "/resources/img/glyphicons-388-log-out.png"))));
         logoutButton.setOnAction(MainScreenController.getLogoutEventHandler());
         logoutButton.setTooltip(new Tooltip("注销"));
 
         usernameLabel = new Label("当前用户: ");
         usercategoryLabel = new Label("类别: ");
 
-//        final Button right2 = new Button( "right2 button" );
-//        final Button right3 = new Button( "right3 button" );
         titleLabel = new Label("当前文章: ");
         authorIDLabel = new Label("作者序号: ");
         authorIDLabel.setVisible(false);
@@ -197,7 +202,6 @@ public class MainScreen extends Application {
         authorinfoButton = new Button("查看作者信息");
         authorinfoButton.setVisible(false);
         authorinfoButton.setDisable(true);
-//        final Button center1 = new Button( "center1 button" );
 
         /*
      * Extending the default ToolBar has the benefit, that you inherit useful features, like auto-collapse
@@ -226,10 +230,6 @@ public class MainScreen extends Application {
         rightSection.setSpacing(spacing);
 
         toolBar.getItems().addAll(leftSection, centerSection, rightSection);
-
-//        openButton.setOnAction( event -> System.out.println( "left" ) );
-//        right.setOnAction( event -> System.out.println( "right" ) );
-//        center.setOnAction( event -> System.out.println( "center" ) );
         toolBar.setPrefHeight(40);
 
         return toolBar;

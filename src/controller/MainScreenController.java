@@ -51,7 +51,8 @@ public class MainScreenController {
         MainScreen.setSaveFileChooser(saveFileChooser);
         
         Scene scene = new Scene(MainScreen.buildUI(), 1280, 720);
-        scene.getStylesheets().add("file:src/css/stylesheet.css");
+        scene.getStylesheets().add("resources/css/stylesheet.css");
+        
         ToolbarController.adjustUserDisplay(user, userType);
         
         currentStage.setTitle("作文标注");
@@ -61,7 +62,9 @@ public class MainScreenController {
     
     private static void configureOpenFileChooser(FileChooser fileChooser) {      
         fileChooser.setTitle("打开作文");
-        fileChooser.setInitialDirectory(new File("src/essay"));
+//        fileChooser.setInitialDirectory(new File("src/essay"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DAT", "*.dat"));
         if(isAdmin()){
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
@@ -70,11 +73,11 @@ public class MainScreenController {
     
     private static void configureSaveFileChooser(FileChooser fileChooser) {      
         fileChooser.setTitle("保存标注至Excel");
-        fileChooser.setInitialDirectory(new File("src/essay"));
+//        fileChooser.setInitialDirectory(new File("src/essay"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("CSV", "*.csv")
         );
-//        fileChooser.setInitialFileName(TextAreaController.getEssayTitle() + ".dat");
     }
     
     public static EventHandler<ActionEvent> getLogoutEventHandler(){

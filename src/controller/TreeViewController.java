@@ -9,6 +9,8 @@ import javafx.scene.control.TreeItem;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeView;
@@ -39,7 +43,8 @@ import model.Mark;
 public class TreeViewController {
 
     public static final String TRIGGER_STRING = "添加...";
-    private static final String PATH = "src/xml/errorType.xml";
+//    private static final String PATH = "/resources/xml/errorType.xml";
+    private static final String PATH = "errorType.xml";
 
     private static TreeItem<String> constructTree(TreeItem<String> treeItemRoot,
             Node xmlRoot) {
@@ -67,6 +72,10 @@ public class TreeViewController {
 
         try {
             File inputFile = new File(PATH);
+//            InputStream ins = TreeViewController.class.getResourceAsStream(PATH);
+//            System.out.println(TreeViewController.class.getResource(PATH).toURI());
+//            File inputFile = File.;
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
@@ -125,7 +134,7 @@ public class TreeViewController {
             if (keyEvent.getCode() == KeyCode.DELETE && MainScreenController.isAdmin()) {
                 TreeItem<String> currNode = MainScreen.getErrorTreeView()
                         .getSelectionModel().getSelectedItem();
-                if(!currNode.getValue().equals(TRIGGER_STRING)){
+                if (!currNode.getValue().equals(TRIGGER_STRING)) {
                     currNode.getParent().getChildren().remove(currNode);
                 }
             }
@@ -184,7 +193,20 @@ public class TreeViewController {
             xmlString = stringWriter.getBuffer().toString();
 
             List<String> lines = Arrays.asList(xmlString);
+//            File file = new File(TreeViewController.class.getResourceAsStream(PATH).);
+
+//            System.out.println(file.getPath());
+//            PrintWriter writer
+//                    = new PrintWriter(
+//                            new File(PATH));
+//            PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)));
+//            for (String line : lines) {
+//                writer.println(line);
+//            }
             Path file = Paths.get(PATH);
+
+//            Path path = Paths.get(PATH);
+//            
             Files.write(file, lines, Charset.forName("UTF-8"));
         } catch (XMLStreamException | IOException e) {
             e.printStackTrace();

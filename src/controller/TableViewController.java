@@ -19,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
@@ -26,11 +27,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import view.MainScreen;
 
 /**
@@ -43,19 +42,16 @@ public class TableViewController {
     private static final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
     private static File dataFile;
     private static File excelFile;
-//    private static HSSFWorkbook excelWorkbook;
 
     public static void loadData(Mark mark) {
         if (!tableData.contains(mark)) {
             tableData.add(mark);
             highlightRows.add(tableData.size() - 1);
-//            MainScreen.getMarkTableView().setItems(tableData);
             MainScreen.getMarkTableView().scrollTo(Integer.MAX_VALUE);
         }
     }
 
     public static void load() {
-//        tableData = FXCollections.observableArrayList();
         tableData.clear();
         try (ObjectInputStream ois
                 = new ObjectInputStream(new FileInputStream(dataFile))) {
@@ -63,7 +59,6 @@ public class TableViewController {
                 tableData.add((Mark) ois.readObject());
             }
         } catch (IOException | ClassNotFoundException ex) {
-//            MainScreen.getMarkTableView().setItems(tableData);
             highlightMarks(TextAreaController.getCurrentSentence());
         }
     }
@@ -84,7 +79,7 @@ public class TableViewController {
     }
 
     public static void setExcelFile(File excelFile) {
-        
+
         TableViewController.excelFile = excelFile;
     }
 
@@ -130,7 +125,7 @@ public class TableViewController {
                 int index = MainScreen.getMarkTableView()
                         .getSelectionModel().getSelectedIndex();
                 tableData.remove(index);
-                highlightRows.remove((Integer)index);
+                highlightRows.remove((Integer) index);
                 refreshTableView();
             }
         };
@@ -173,33 +168,33 @@ public class TableViewController {
                     }
                 }
             });
-            tableData.addListener(new ListChangeListener<Mark>() {
-                @Override
-                public void onChanged(ListChangeListener.Change<? extends Mark> change) {
-                    refreshTableView();
-                }
+            tableData.addListener((ListChangeListener.Change<? extends Mark> change) -> {
+                refreshTableView();
             });
             return row;
         };
     }
-    
-    public static void dumpToExcel(){
-        final String[] colNames = MainScreen.getTableColNames();
-//        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter
-//            (new FileOutputStream(excelFile.getPath()),"UTF8"));) {
-        try (PrintWriter w = new PrintWriter(new OutputStreamWriter
-            (new FileOutputStream(excelFile.getPath()),"UTF8"));) {
 
+    public static void dumpToExcel() {
+//        HSSFWorkbook excelWorkbook = new HSSFWorkbook();
+//        HSSFSheet sheet = workbook.createSheet("Java Books");
+        final String[] colNames = MainScreen.getTableColNames();
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF8"));) {
             int i;
-            for(i = 0;i != colNames.length - 1; ++i){
+            for (i = 0; i != colNames.length - 1; ++i) {
                 w.print(colNames[i] + ",");
             }
-            w.print(colNames[i] + "\n");
-            for(Mark item : tableData){
-                w.print(item.toString() + "\n");
+            w.println(colNames[i]);
+            for (Mark item : tableData) {
+                w.println(item.toString());
             }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("提示");
+            alert.setHeaderText(null);
+            alert.setContentText("已保存");
+            alert.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 }
