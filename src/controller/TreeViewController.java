@@ -9,8 +9,6 @@ import javafx.scene.control.TreeItem;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeView;
@@ -43,7 +39,6 @@ import model.Mark;
 public class TreeViewController {
 
     public static final String TRIGGER_STRING = "添加...";
-//    private static final String PATH = "/resources/xml/errorType.xml";
     private static final String PATH = "errorType.xml";
 
     private static TreeItem<String> constructTree(TreeItem<String> treeItemRoot,

@@ -50,7 +50,7 @@ public class MainScreenController {
         MainScreen.setOpenFileChooser(openFileChooser);
         MainScreen.setSaveFileChooser(saveFileChooser);
         
-        Scene scene = new Scene(MainScreen.buildUI(), 1280, 720);
+        Scene scene = new Scene(MainScreen.buildUI(), 1200, 700);
         scene.getStylesheets().add("resources/css/stylesheet.css");
         
         ToolbarController.adjustUserDisplay(user, userType);
