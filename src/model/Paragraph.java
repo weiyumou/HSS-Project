@@ -52,7 +52,7 @@ public class Paragraph implements Serializable{
                 case '？':
                     ++count;
                     sentences.add(new Sentence(numPrecedingSentences + count, 
-                        count, content.substring(prev, i + 1)));
+                        count, content.substring(prev, i + 1).replace("\t", "")));
                     prev = i + 1;
                     break;
                 default:

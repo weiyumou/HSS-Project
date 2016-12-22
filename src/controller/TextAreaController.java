@@ -102,9 +102,9 @@ public class TextAreaController {
             if (keyEvent.getCode() == KeyCode.C && keyEvent.isShortcutDown()) {
                 keyEvent.consume();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("禁止拷贝");
+                alert.setTitle("提示");
                 alert.setHeaderText("错误");
-                alert.setContentText("拷贝文章内容是不允许的！");
+                alert.setContentText("无法复制内容");
                 alert.showAndWait();
             }
         };
