@@ -320,7 +320,6 @@ public class TableViewController {
     private static void highlightSeg(String segment, String typeIError) {
         int start = MainScreen.getCurrEssay().getText().indexOf(segment);
         if (start != -1) {
-
             switch (typeIError) {
                 case "标点":
                     MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "punc");

@@ -1,9 +1,11 @@
+package view;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+
 
 import controller.MainScreenController;
 import controller.TableViewController;
@@ -58,6 +60,7 @@ public class MainScreen extends Application {
     private static TextArea prevEssay;
 //    private static TextArea currEssay;
     private static StyleClassedTextArea currEssay;
+    
     private static TextArea nextEssay;
 
     private static Label usernameLabel;
@@ -256,6 +259,7 @@ public class MainScreen extends Application {
         prevEssay = new TextArea();
 //        currEssay = new TextArea();
         currEssay = new StyleClassedTextArea();
+        
         nextEssay = new TextArea();
 
         prevEssay.setStyle("-fx-font-size: 20px;");
@@ -321,12 +325,12 @@ public class MainScreen extends Application {
 
 //    public static TextArea getCurrEssay() {
 //        return currEssay;
-
+//    }
     public static StyleClassedTextArea getCurrEssay() {
         return currEssay;
     }
 
-//    }
+
     public static TextArea getNextEssay() {
         return nextEssay;
     }

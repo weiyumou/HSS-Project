@@ -136,6 +136,7 @@ public class TextAreaController {
         currentSentence = currentEssay.getSingleSentence(currentSentenceNo);
 //        MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
         MainScreen.getCurrEssay().replaceText("\t" + currentSentence.toString());
+        
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
 
