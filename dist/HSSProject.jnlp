@@ -3,7 +3,7 @@
   <information>
     <title>HSSProject</title>
     <vendor>weiyumou</vendor>
-    <description>HSSProject</description>
+    <description>null</description>
     <offline-allowed/>
   </information>
   <resources>
@@ -12,6 +12,9 @@
     <jar href="lib\poi-3.16-beta1.jar" size="2603977" download="eager" />
     <jar href="lib\richtextfx-fat-0.6.10.jar" size="675497" download="eager" />
   </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="HSSProject" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
   <jfx:javafx-desc  width="800" height="600" main-class="view.MainScreen"  name="HSSProject" />
-  <update check="background"/>
+  <update check="always"/>
 </jnlp>
