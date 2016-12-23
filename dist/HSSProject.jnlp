@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="HSSProject.jar" size="49504" download="eager" />
+    <jar href="HSSProject.jar" size="49647" download="eager" />
     <jar href="lib\poi-3.16-beta1.jar" size="2603977" download="eager" />
     <jar href="lib\richtextfx-fat-0.6.10.jar" size="675497" download="eager" />
   </resources>

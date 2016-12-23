@@ -3,7 +3,7 @@
     <description>Builds, tests, and runs the project HSSProject.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <!--<target name="-post-jfx-deploy">
+	<!--<target name="-post-jfx-deploy">
        <fx:deploy width="${javafx.run.width}" height="${javafx.run.height}" 
                   nativeBundles="all"
                   outdir="${basedir}/${dist.dir}" outfile="${application.title}">

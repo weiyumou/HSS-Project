@@ -26,9 +26,19 @@ and open the template in the editor.
 }
 
 .sent {
-    -fx-fill: violet;
+    /*-fx-fill: violet;*/
+    -fx-underline : true;
+    -fx-font-weight: bold;
 }
 
 .para {
-    -fx-fill: deeppink ;
+    /*-fx-fill: deeppink ;*/
+    -fx-underline : true;
+}
+
+.norm {
+    -fx-fill: black ;
+    -fx-underline : false;
+    -fx-font-weight: normal;
+    -fx-font-style: normal ;
 }

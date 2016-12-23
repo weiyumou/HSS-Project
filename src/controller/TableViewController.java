@@ -128,8 +128,10 @@ public class TableViewController {
             if (keyEvent.getCode() == KeyCode.DELETE) {
                 int index = MainScreen.getMarkTableView()
                         .getSelectionModel().getSelectedIndex();
+                Mark currMark = tableData.get(index);
                 tableData.remove(index);
                 highlightRows.remove((Integer) index);
+                unhighlightSeg(currMark.getError().getSegment());
                 refreshTableView();
             }
         };
@@ -317,6 +319,14 @@ public class TableViewController {
         }
     }
 
+    private static void unhighlightSeg(String segment){
+        MainScreen.getCurrEssay().selectRange(0, 0);
+        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
+        if (start != -1) {
+            MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "norm");
+        }
+    }
+    
     private static void highlightSeg(String segment, String typeIError) {
         int start = MainScreen.getCurrEssay().getText().indexOf(segment);
         if (start != -1) {
