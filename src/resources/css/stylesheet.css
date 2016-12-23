@@ -12,3 +12,23 @@ and open the template in the editor.
     /*-fx-background-color:#ff3333;*/
     -fx-control-inner-background:#ff3333;
 }
+
+.punc { 
+    -fx-fill: teal; 
+}
+
+.lett {
+    -fx-fill: gold;
+}
+
+.word {
+    -fx-fill: coral;
+}
+
+.sent {
+    -fx-fill: violet;
+}
+
+.para {
+    -fx-fill: deeppink ;
+}

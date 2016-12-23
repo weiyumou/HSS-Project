@@ -79,11 +79,12 @@ public class TextAreaController {
 
     public static EventHandler<ScrollEvent> getScrollEventHandler() {
         return (ScrollEvent event) -> {
+            System.out.println("Scroll");
             if (event.getDeltaY() < 0) { //up
                 scrollup();
             } else if (event.getDeltaY() > 0) { //down
                 scrolldown();
-            }
+            } 
         };
     }
 
@@ -133,11 +134,13 @@ public class TextAreaController {
         MainScreen.getPrevEssay().setText(currentEssay.getSegment(1, currentSentenceNo));
         MainScreen.getPrevEssay().setScrollTop(Double.MAX_VALUE);
         currentSentence = currentEssay.getSingleSentence(currentSentenceNo);
-        MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
+//        MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
+        MainScreen.getCurrEssay().replaceText("\t" + currentSentence.toString());
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
 
         TableViewController.highlightMarks(currentSentence);
+        TableViewController.highlightErrors(currentSentence);
     }
 
     public static String getAuthorID() {
@@ -155,13 +158,13 @@ public class TextAreaController {
         return currentSentence;
     }
 
-    public static void highlightText(String segment) {
-        MainScreen.getCurrEssay().selectRange(0, 0);
-        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
-        if (start != -1) {
-            MainScreen.getCurrEssay().selectRange(start, start + segment.length());
-        }
-    }
+//    public static void highlightText(String segment) {
+//        MainScreen.getCurrEssay().selectRange(0, 0);
+//        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
+//        if (start != -1) {
+//            MainScreen.getCurrEssay().selectRange(start, start + segment.length());
+//        }
+//    }
 
     public static void convertToDAT(List<File> files) {
         for (File file : files) {

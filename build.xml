@@ -3,7 +3,7 @@
     <description>Builds, tests, and runs the project HSSProject.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <!-- <target name="-post-jfx-deploy">
+    <!--<target name="-post-jfx-deploy">
        <fx:deploy width="${javafx.run.width}" height="${javafx.run.height}" 
                   nativeBundles="all"
                   outdir="${basedir}/${dist.dir}" outfile="${application.title}">
@@ -17,7 +17,7 @@
           <fx:info title="${application.title}" 
                    vendor="${application.vendor}"/>
         </fx:deploy>          
-     </target> -->
+     </target>-->
     <!--
 
     There exist several targets which are by default empty and which can be 

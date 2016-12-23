@@ -43,6 +43,7 @@ import javafx.util.Callback;
 import model.EditingCell;
 import model.Mark;
 import model.TextFieldTreeCellImpl;
+import org.fxmisc.richtext.StyleClassedTextArea;
 
 /**
  *
@@ -55,7 +56,8 @@ public class MainScreen extends Application {
     private static TreeView<String> errorTreeView;
     private static TableView<Mark> markTableView;
     private static TextArea prevEssay;
-    private static TextArea currEssay;
+//    private static TextArea currEssay;
+    private static StyleClassedTextArea currEssay;
     private static TextArea nextEssay;
 
     private static Label usernameLabel;
@@ -252,7 +254,8 @@ public class MainScreen extends Application {
         }
 
         prevEssay = new TextArea();
-        currEssay = new TextArea();
+//        currEssay = new TextArea();
+        currEssay = new StyleClassedTextArea();
         nextEssay = new TextArea();
 
         prevEssay.setStyle("-fx-font-size: 20px;");
@@ -316,10 +319,14 @@ public class MainScreen extends Application {
         return prevEssay;
     }
 
-    public static TextArea getCurrEssay() {
+//    public static TextArea getCurrEssay() {
+//        return currEssay;
+
+    public static StyleClassedTextArea getCurrEssay() {
         return currEssay;
     }
 
+//    }
     public static TextArea getNextEssay() {
         return nextEssay;
     }
