@@ -18,17 +18,19 @@ and open the template in the editor.
 }
 
 .lett {
+    -fx-font-weight: bolder;
     -fx-fill: gold;
 }
 
 .word {
-    -fx-fill: coral;
+    /*-fx-fill: coral;*/
+    -fx-strikethrough:true;
 }
 
 .sent {
     /*-fx-fill: violet;*/
     -fx-underline : true;
-    -fx-font-weight: bold;
+    /*-fx-font-weight: bold;*/
 }
 
 .para {
@@ -41,4 +43,5 @@ and open the template in the editor.
     -fx-underline : false;
     -fx-font-weight: normal;
     -fx-font-style: normal ;
+    -fx-strikethrough:false;
 }

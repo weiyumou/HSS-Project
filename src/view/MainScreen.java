@@ -73,9 +73,9 @@ public class MainScreen extends Application {
     private static Button saveButton;
     
     private static final String[] tableColNames = {
-        "作者序号", "句子序号", "句子在段落中序号", 
-        "句子", "错误类型", "具体错误类型", 
-        "病句及句子成分错误类型", "错误所在片段", "备注"
+        "作者序号", "句子序号", "段落序号", 
+        "句子", "错误片段", "错误类型(I)", "错误类型(II)", 
+        "错误类型(III)", "修改", "备注"
     };
 
     @Override
@@ -96,18 +96,18 @@ public class MainScreen extends Application {
     }
 
     private static Node initialiseTableView() {
-        final int numOfCol = 9;
+        final int numOfCol = tableColNames.length;
 
         markTableView = new TableView<>();
         markTableView.setPlaceholder(new Label("没有数据"));
         markTableView.setRowFactory(TableViewController.getRowFactory());
 
         TableColumn authorIDCol = new TableColumn(tableColNames[0]);
-        authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
+        authorIDCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         authorIDCol.setCellValueFactory(new PropertyValueFactory<>("authorid"));
 
         TableColumn idInEssayCol = new TableColumn(tableColNames[1]);
-        idInEssayCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol * 2));
+        idInEssayCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         idInEssayCol.setCellValueFactory(new PropertyValueFactory<>("idInEssay"));
 
         TableColumn idInParaCol = new TableColumn(tableColNames[2]);
@@ -117,26 +117,45 @@ public class MainScreen extends Application {
         TableColumn contentCol = new TableColumn(tableColNames[3]);
         contentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         contentCol.setCellValueFactory(new PropertyValueFactory<>("sentenceContent"));
+        
+        TableColumn errorSegmentCol = new TableColumn(tableColNames[4]);
+        errorSegmentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
+        errorSegmentCol.setCellValueFactory(new PropertyValueFactory<>("errorSegment"));
+        
 
-        TableColumn typeIErrorCol = new TableColumn(tableColNames[4]);
+        TableColumn typeIErrorCol = new TableColumn(tableColNames[5]);
         typeIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIError"));
 
-        TableColumn typeIIErrorCol = new TableColumn(tableColNames[5]);
+        TableColumn typeIIErrorCol = new TableColumn(tableColNames[6]);
         typeIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIError"));
 
-        TableColumn typeIIIErrorCol = new TableColumn(tableColNames[6]);
+        TableColumn typeIIIErrorCol = new TableColumn(tableColNames[7]);
         typeIIIErrorCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         typeIIIErrorCol.setCellValueFactory(new PropertyValueFactory<>("typeIIIError"));
-
-        TableColumn errorSegmentCol = new TableColumn(tableColNames[7]);
-        errorSegmentCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
-        errorSegmentCol.setCellValueFactory(new PropertyValueFactory<>("errorSegment"));
+        
+        
+        Callback<TableColumn, TableCell> modiCellFactory = (TableColumn p) -> new EditingCell();
+        TableColumn modificationCol = new TableColumn(tableColNames[8]);
+        modificationCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
+        modificationCol.setCellValueFactory(new PropertyValueFactory<>("modification"));
+        
+        modificationCol.setCellFactory(modiCellFactory);
+        modificationCol.setOnEditCommit(
+                new EventHandler<CellEditEvent<Mark, String>>() {
+            @Override
+            public void handle(CellEditEvent<Mark, String> t) {
+                Mark currMark = t.getTableView().getItems().get(
+                        t.getTablePosition().getRow());
+                currMark.getError().setModification(t.getNewValue());
+            }
+        });
+        
 
         Callback<TableColumn, TableCell> cellFactory = (TableColumn p) -> new EditingCell();
-        TableColumn remarkCol = new TableColumn(tableColNames[8]);
-        remarkCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol / 2.0));
+        TableColumn remarkCol = new TableColumn(tableColNames[9]);
+        remarkCol.prefWidthProperty().bind(markTableView.widthProperty().divide(numOfCol));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("remark"));
         remarkCol.setCellFactory(cellFactory);
         remarkCol.setOnEditCommit(
@@ -147,14 +166,13 @@ public class MainScreen extends Application {
                         t.getTablePosition().getRow());
                 currMark.getError().setRemark(t.getNewValue());
             }
-        }
-        );
+        });
 
         markTableView.setEditable(true);
 
         markTableView.getColumns().addAll(authorIDCol, idInEssayCol, idInParaCol,
-                contentCol, typeIErrorCol, typeIIErrorCol, typeIIIErrorCol,
-                errorSegmentCol, remarkCol);
+                contentCol, errorSegmentCol, typeIErrorCol, typeIIErrorCol, typeIIIErrorCol,
+                modificationCol, remarkCol);
 
         markTableView.setPrefHeight(200);
 

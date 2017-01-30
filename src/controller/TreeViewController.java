@@ -113,7 +113,7 @@ public class TreeViewController {
                         boolean isItemSelected = TableViewController.updateSelectedItem(errorTypes);
 
                         if (!isItemSelected) {
-                            Error error = new Error(errorTypes, selectedText, "");
+                            Error error = new Error(errorTypes, selectedText, "", "");
                             Mark mark = new Mark(TextAreaController.getAuthorID(),
                                     TextAreaController.getCurrentSentence(), error);
                             TableViewController.loadData(mark);

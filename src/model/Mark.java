@@ -75,6 +75,10 @@ public class Mark implements Serializable {
     public SimpleStringProperty errorSegmentProperty() {
         return new SimpleStringProperty(error.getSegment());
     }
+    
+    public SimpleStringProperty modificationProperty(){
+        return new SimpleStringProperty(error.getModification());
+    }
 
     public SimpleStringProperty remarkProperty() {
         return new SimpleStringProperty(error.getRemark());

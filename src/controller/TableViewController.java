@@ -13,6 +13,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -30,6 +32,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
+import org.fxmisc.richtext.StyleSpan;
+import org.fxmisc.richtext.StyleSpans;
 import view.MainScreen;
 
 /**
@@ -152,64 +156,18 @@ public class TableViewController {
                         getStyleClass().removeAll(Collections.singleton("highlightedRow"));
                     }
                 }
-
-//                    
-//                    String typeIError = mark.getError().getErrorTypes().get(0);
-//                    if (highlightRows.contains(getIndex())) {
-//                        switch (typeIError) {
-//                            case "标点":
-//                                if (!getStyleClass().contains("punc")) {
-//                                    getStyleClass().add("punc");
-//                                }   break;
-//                            case "字":
-//                                if (!getStyleClass().contains("lett")) {
-//                                    getStyleClass().add("lett");
-//                                }   break;
-//                            case "词":
-//                                if (!getStyleClass().contains("word")) {
-//                                   getStyleClass().add("word");
-//                                }   break;
-//                            case "句":
-//                                if (!getStyleClass().contains("sent")) {
-//                                    getStyleClass().add("sent");
-//                                }   break;
-//                            case "篇章":
-//                                if (!getStyleClass().contains("para")) {
-//                                    getStyleClass().add("para");
-//                            }   break;
-//                        }
-//                    } else {
-//                        switch (typeIError) {
-//                            case "标点":
-//                                getStyleClass().removeAll(Collections.singleton("punc"));
-//                                break;
-//                            case "字":
-//                               getStyleClass().removeAll(Collections.singleton("lett"));
-//                                break;
-//                            case "词":
-//                                getStyleClass().removeAll(Collections.singleton("word"));
-//                                break;
-//                            case "句":
-//                                getStyleClass().removeAll(Collections.singleton("sent"));
-//                                break;
-//                            case "篇章":
-//                                getStyleClass().removeAll(Collections.singleton("para"));
-//                                break;
-//                        }
-//                    }
-//                    
-//                    
-//                    
-//                }
             };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 1) {
-                        Mark currMark = tableData.get(row.getIndex());
-                        TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
+                        if(row.getIndex() < tableData.size()){
+                            Mark currMark = tableData.get(row.getIndex());
+                            TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
 //                        TextAreaController.highlightText(tableData.get(row.getIndex())
 //                                .getError().getSegment());
-                        highlightText(tableData.get(row.getIndex()).getError().getSegment());
+                            highlightText(tableData.get(row.getIndex()).getError().getSegment());
+                        }
+                        
                     }
                 }
             });
@@ -223,53 +181,6 @@ public class TableViewController {
                     } else {
                         row.getStyleClass().removeAll(Collections.singleton("highlightedRow"));
                     }
-//                    String typeIError = tableData.get(row.getIndex()).getError().getErrorTypes().get(0);
-//                    if (highlightRows.contains(row.getIndex())) {
-//                        switch (typeIError) {
-//                            case "标点":
-//                                if (!row.getStyleClass().contains("punc")) {
-//                                    row.getStyleClass().add("punc");
-//                                }   break;
-////                        if (!row.getStyleClass().contains("highlightedRow")) {
-////                            row.getStyleClass().add("highlightedRow");
-////                        }
-//                            case "字":
-//                                if (!row.getStyleClass().contains("lett")) {
-//                                    row.getStyleClass().add("lett");
-//                                }   break;
-//                            case "词":
-//                                if (!row.getStyleClass().contains("word")) {
-//                                    row.getStyleClass().add("word");
-//                                }   break;
-//                            case "句":
-//                                if (!row.getStyleClass().contains("sent")) {
-//                                    row.getStyleClass().add("sent");
-//                                }   break;
-//                            case "篇章":
-//                                if (!row.getStyleClass().contains("para")) {
-//                                    row.getStyleClass().add("para");
-//                            }   break;
-//                        }
-//                    } else {
-////                        row.getStyleClass().removeAll(Collections.singleton("highlightedRow"));
-//                        switch (typeIError) {
-//                            case "标点":
-//                                row.getStyleClass().removeAll(Collections.singleton("punc"));
-//                                break;
-//                            case "字":
-//                                row.getStyleClass().removeAll(Collections.singleton("lett"));
-//                                break;
-//                            case "词":
-//                                row.getStyleClass().removeAll(Collections.singleton("word"));
-//                                break;
-//                            case "句":
-//                                row.getStyleClass().removeAll(Collections.singleton("sent"));
-//                                break;
-//                            case "篇章":
-//                                row.getStyleClass().removeAll(Collections.singleton("para"));
-//                                break;
-//                        }
-//                    }
                 }
             });
             tableData.addListener((ListChangeListener.Change<? extends Mark> change) -> {
@@ -329,22 +240,63 @@ public class TableViewController {
     
     private static void highlightSeg(String segment, String typeIError) {
         int start = MainScreen.getCurrEssay().getText().indexOf(segment);
+        StyleSpans<Collection<String>> curr_stylespan = MainScreen.getCurrEssay()
+                .getStyleSpans(start, start + segment.length());
+        Collection<String> curr_style = curr_stylespan.getStyleSpan(0).getStyle();
+        
         if (start != -1) {
             switch (typeIError) {
                 case "标点":
-                    MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "punc");
+                    if(curr_style == null || curr_style.isEmpty()){
+                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "punc");
+                    }else if(!curr_style.contains("punc")){
+                        Collection<String> new_style = new ArrayList<>(curr_style);
+                        new_style.add("punc");
+                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
+                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
+                    }
                     break;
                 case "字":
-                    MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "lett");
+                    if(curr_style == null || curr_style.isEmpty()){
+                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "lett");
+                    }else if(!curr_style.contains("lett")){
+                        Collection<String> new_style = new ArrayList<>(curr_style);
+                        new_style.add("lett");
+                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
+                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
+                    }
                     break;
                 case "词":
-                    MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "word");
+                    if(curr_style == null || curr_style.isEmpty()){
+                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "word");
+                    }else if(!curr_style.contains("word")){
+                        Collection<String> new_style = new ArrayList<>(curr_style);
+                        new_style.add("word");
+                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
+                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
+                    }
                     break;
                 case "句":
-                    MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "sent");
+                    if(curr_style == null || curr_style.isEmpty()){
+                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "sent");
+                    }else if(!curr_style.contains("sent")){
+                        Collection<String> new_style = new ArrayList<>(curr_style);
+                        new_style.add("sent");
+                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
+                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
+                    }
                     break;
                 case "篇章":
-                    MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "para");
+                    if(curr_style == null || curr_style.isEmpty()){
+                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "para");
+                    }else if(!curr_style.contains("para")){
+                        Collection<String> new_style = new ArrayList<>(curr_style);
+                        new_style.add("para");
+                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
+                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
+                    }
+                    break;
+                default:
                     break;
             }
         }

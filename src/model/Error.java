@@ -17,12 +17,14 @@ public class Error implements Serializable{
 
     private List<String> errorTypes;
     private String segment;
+    private String modification;
     private String remark;
 
-    public Error(List<String> errorTypes, String segment, String remark) {
+    public Error(List<String> errorTypes, String segment, String modification, String remark) {
         this.errorTypes = errorTypes;
         this.segment = segment;
         this.remark = remark;
+        this.modification = modification;
     }
 
     public List<String> getErrorTypes() {
@@ -48,6 +50,16 @@ public class Error implements Serializable{
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public String getModification() {
+        return modification;
+    }
+
+    public void setModification(String modification) {
+        this.modification = modification;
+    }
+    
+    
     
     @Override
     public boolean equals(Object obj){
@@ -81,7 +93,7 @@ public class Error implements Serializable{
         for(String error : errorTypes){
             res += error + ",";
         }
-        return res + segment + "," + remark;
+        return res + segment + "," + modification + "," + remark;
     }
     
    
