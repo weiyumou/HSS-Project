@@ -32,7 +32,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
-import org.fxmisc.richtext.StyleSpan;
 import org.fxmisc.richtext.StyleSpans;
 import view.MainScreen;
 
@@ -191,10 +190,10 @@ public class TableViewController {
     }
 
     public static void dumpToExcel() {
-//        HSSFWorkbook excelWorkbook = new HSSFWorkbook();
-//        HSSFSheet sheet = workbook.createSheet("Java Books");
         final String[] colNames = MainScreen.getTableColNames();
-        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter
+            (new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
+            w.print("\uFEFF");
             int i;
             for (i = 0; i != colNames.length - 1; ++i) {
                 w.print(colNames[i] + ",");

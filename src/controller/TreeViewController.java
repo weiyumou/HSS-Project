@@ -38,7 +38,7 @@ import model.Mark;
  */
 public class TreeViewController {
 
-    public static final String TRIGGER_STRING = "添加...";
+    public static final String TRIGGER_STRING = "添加错误类型";
     private static final String PATH = "errorType.xml";
 
     private static TreeItem<String> constructTree(TreeItem<String> treeItemRoot,
