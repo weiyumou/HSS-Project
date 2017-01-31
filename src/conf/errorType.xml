@@ -1,1 +1,91 @@
-<?xml version="1.0" ?><ErrorType name="错误类型"><TypeI name="标点"><TypeII name="标点错误"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="标点空缺"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="标点多余"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="添加..."></TypeII></TypeI><TypeI name="字"><TypeII name="错字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="别字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="漏字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="多字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="简繁体字混淆"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="异体字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="拼音字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="无法识别的字"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="添加..."></TypeII></TypeI><TypeI name="词"><TypeII name="错词"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="离合词错误"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="缺词"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="多词"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="添加..."></TypeII></TypeI><TypeI name="句"><TypeII name="病句"><TypeIII name="把字句"></TypeIII><TypeIII name="被字句"></TypeIII><TypeIII name="比较句"></TypeIII><TypeIII name="连字句"></TypeIII><TypeIII name="有字句"></TypeIII><TypeIII name="是字句"></TypeIII><TypeIII name="存现句"></TypeIII><TypeIII name="兼语句"></TypeIII><TypeIII name="连动句"></TypeIII><TypeIII name="双宾句"></TypeIII><TypeIII name="未知句"></TypeIII><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="句子成分残缺"><TypeIII name="主语残缺"></TypeIII><TypeIII name="谓语残缺"></TypeIII><TypeIII name="述语残缺"></TypeIII><TypeIII name="宾语残缺"></TypeIII><TypeIII name="补语残缺"></TypeIII><TypeIII name="定语残缺"></TypeIII><TypeIII name="状语残缺"></TypeIII><TypeIII name="中心语残缺"></TypeIII><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="句子成分多余"><TypeIII name="主语多余"></TypeIII><TypeIII name="谓语多余"></TypeIII><TypeIII name="述语多余"></TypeIII><TypeIII name="宾语多余"></TypeIII><TypeIII name="补语多余"></TypeIII><TypeIII name="定语多余"></TypeIII><TypeIII name="状语多余"></TypeIII><TypeIII name="中心语多余"></TypeIII><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="语序错误"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="句子杂糅"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="重叠错误"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="固定格式错误"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="未完句"><TypeIII name="添加..."></TypeIII></TypeII><TypeII name="添加..."><TypeIII name="添加..."></TypeIII></TypeII></TypeI><TypeI name="篇章"><TypeII name="添加..."></TypeII></TypeI><TypeI name="添加..."></TypeI></ErrorType>
+<?xml version="1.0" ?>
+<ErrorType name="错误类型">
+    <TypeI name="标点">
+        <TypeII name="标点错误"></TypeII>
+        <TypeII name="标点多余"></TypeII>
+        <TypeII name="标点缺漏"></TypeII>
+        <TypeII name="添加错误类型"></TypeII>
+    </TypeI>
+    <TypeI name="字">
+        <TypeII name="错字"></TypeII>
+        <TypeII name="别字"></TypeII>
+        <TypeII name="漏字"></TypeII>
+        <TypeII name="多字"></TypeII>
+        <TypeII name="繁体字/简化字"></TypeII>
+        <TypeII name="异体字"></TypeII>
+        <TypeII name="拼音字"></TypeII>
+        <TypeII name="无法识别"></TypeII>
+        <TypeII name="添加错误类型"></TypeII>
+    </TypeI>
+    <TypeI name="词">
+        <TypeII name="错词"></TypeII>
+        <TypeII name="缺词"></TypeII>
+        <TypeII name="多词"></TypeII>
+        <TypeII name="外文词替代汉语词"></TypeII>
+        <TypeII name="添加错误类型"></TypeII>
+    </TypeI>
+    <TypeI name="句">
+        <TypeII name="搭配错误">
+            <TypeIII name="主谓搭配不当"></TypeIII>
+            <TypeIII name="动宾搭配不当"></TypeIII>
+            <TypeIII name="定中搭配不当"></TypeIII>
+            <TypeIII name="状中搭配不当"></TypeIII>
+            <TypeIII name="述补搭配不当"></TypeIII>
+            <TypeIII name="介宾搭配不当"></TypeIII>
+            <TypeIII name="添加错误类型"></TypeIII>
+        </TypeII>
+        <TypeII name="构式错误">
+            <TypeIII name="把字句错误"></TypeIII>
+            <TypeIII name="被字句错误"></TypeIII>
+            <TypeIII name="比字句错误"></TypeIII>
+            <TypeIII name="连字句错误"></TypeIII>
+            <TypeIII name="有字句错误"></TypeIII>
+            <TypeIII name="&quot;是……的&quot;句错误"></TypeIII>
+            <TypeIII name="存现句错误"></TypeIII>
+            <TypeIII name="兼语句错误"></TypeIII>
+            <TypeIII name="连动句错误"></TypeIII>
+            <TypeIII name="双宾句错误"></TypeIII>
+            <TypeIII name="形容词谓语句错误"></TypeIII>
+            <TypeIII name="添加错误类型"></TypeIII>
+        </TypeII>
+        <TypeII name="句子成分残缺">
+            <TypeIII name="主语残缺"></TypeIII>
+            <TypeIII name="谓语残缺"></TypeIII>
+            <TypeIII name="述语残缺"></TypeIII>
+            <TypeIII name="宾语残缺"></TypeIII>
+            <TypeIII name="补语残缺"></TypeIII>
+            <TypeIII name="定语残缺"></TypeIII>
+            <TypeIII name="状语残缺"></TypeIII>
+            <TypeIII name="中心语残缺"></TypeIII>
+            <TypeIII name="添加错误类型"></TypeIII>
+        </TypeII>
+        <TypeII name="句子成分多余">
+            <TypeIII name="主语多余"></TypeIII>
+            <TypeIII name="谓语多余"></TypeIII>
+            <TypeIII name="述语多余"></TypeIII>
+            <TypeIII name="宾语多余"></TypeIII>
+            <TypeIII name="补语多余"></TypeIII>
+            <TypeIII name="定语多余"></TypeIII>
+            <TypeIII name="状语多余"></TypeIII>
+            <TypeIII name="中心语多余"></TypeIII>
+            <TypeIII name="添加错误类型"></TypeIII>
+        </TypeII>
+        <TypeII name="语序错误"></TypeII>
+        <TypeII name="句式杂糅"></TypeII>
+        <TypeII name="重叠错误"></TypeII>
+        <TypeII name="固定格式错误"></TypeII>
+        <TypeII name="未完句"></TypeII>
+        <TypeII name="句处理存疑"></TypeII>
+        <TypeII name="添加错误类型"></TypeII>
+    </TypeI>
+    <TypeI name="篇章及语用">
+        <TypeII name="关联错误"></TypeII>
+        <TypeII name="指代错误"></TypeII>
+        <TypeII name="照应错误"></TypeII>
+        <TypeII name="省略错误"></TypeII>
+        <TypeII name="语义连贯"></TypeII>
+        <TypeII name="文化理解和表达错误"></TypeII>
+        <TypeII name="添加错误类型"></TypeII>
+    </TypeI>
+    <TypeI name="添加错误类型"></TypeI>
+</ErrorType>
