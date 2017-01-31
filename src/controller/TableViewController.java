@@ -32,7 +32,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import model.Mark;
 import model.Sentence;
+import org.fxmisc.richtext.StyleSpan;
 import org.fxmisc.richtext.StyleSpans;
+import org.fxmisc.richtext.StyleSpansBuilder;
 import view.MainScreen;
 
 /**
@@ -98,7 +100,7 @@ public class TableViewController {
 
     public static void highlightMarks(Sentence currSentence) {
         highlightRows.clear();
-        for (int i = 0; i != tableData.size(); ++i) {
+        for (int i = 0; i < tableData.size(); ++i) {
             if (tableData.get(i).getSentence().equals(currSentence)) {
                 highlightRows.add(i);
             }
@@ -135,6 +137,7 @@ public class TableViewController {
                 tableData.remove(index);
                 highlightRows.remove((Integer) index);
                 unhighlightSeg(currMark.getError().getSegment());
+                TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
                 refreshTableView();
             }
         };
@@ -159,14 +162,12 @@ public class TableViewController {
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 1) {
-                        if(row.getIndex() < tableData.size()){
+                        if (row.getIndex() < tableData.size()) {
                             Mark currMark = tableData.get(row.getIndex());
                             TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
-//                        TextAreaController.highlightText(tableData.get(row.getIndex())
-//                                .getError().getSegment());
                             highlightText(tableData.get(row.getIndex()).getError().getSegment());
                         }
-                        
+
                     }
                 }
             });
@@ -191,8 +192,7 @@ public class TableViewController {
 
     public static void dumpToExcel() {
         final String[] colNames = MainScreen.getTableColNames();
-        try (PrintWriter w = new PrintWriter(new OutputStreamWriter
-            (new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
             w.print("\uFEFF");
             int i;
             for (i = 0; i != colNames.length - 1; ++i) {
@@ -229,75 +229,53 @@ public class TableViewController {
         }
     }
 
-    private static void unhighlightSeg(String segment){
+    private static void unhighlightSeg(String segment) {
         MainScreen.getCurrEssay().selectRange(0, 0);
         int start = MainScreen.getCurrEssay().getText().indexOf(segment);
         if (start != -1) {
-            MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "norm");
+            MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
         }
     }
-    
+
     private static void highlightSeg(String segment, String typeIError) {
         int start = MainScreen.getCurrEssay().getText().indexOf(segment);
-        StyleSpans<Collection<String>> curr_stylespan = MainScreen.getCurrEssay()
-                .getStyleSpans(start, start + segment.length());
-        Collection<String> curr_style = curr_stylespan.getStyleSpan(0).getStyle();
-        
-        if (start != -1) {
-            switch (typeIError) {
-                case "标点":
-                    if(curr_style == null || curr_style.isEmpty()){
-                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "punc");
-                    }else if(!curr_style.contains("punc")){
-                        Collection<String> new_style = new ArrayList<>(curr_style);
-                        new_style.add("punc");
-                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
-                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
-                    }
-                    break;
-                case "字":
-                    if(curr_style == null || curr_style.isEmpty()){
-                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "lett");
-                    }else if(!curr_style.contains("lett")){
-                        Collection<String> new_style = new ArrayList<>(curr_style);
-                        new_style.add("lett");
-                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
-                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
-                    }
-                    break;
-                case "词":
-                    if(curr_style == null || curr_style.isEmpty()){
-                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "word");
-                    }else if(!curr_style.contains("word")){
-                        Collection<String> new_style = new ArrayList<>(curr_style);
-                        new_style.add("word");
-                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
-                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
-                    }
-                    break;
-                case "句":
-                    if(curr_style == null || curr_style.isEmpty()){
-                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "sent");
-                    }else if(!curr_style.contains("sent")){
-                        Collection<String> new_style = new ArrayList<>(curr_style);
-                        new_style.add("sent");
-                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
-                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
-                    }
-                    break;
-                case "篇章":
-                    if(curr_style == null || curr_style.isEmpty()){
-                        MainScreen.getCurrEssay().setStyleClass(start, start + segment.length(), "para");
-                    }else if(!curr_style.contains("para")){
-                        Collection<String> new_style = new ArrayList<>(curr_style);
-                        new_style.add("para");
-                        MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
-                        MainScreen.getCurrEssay().setStyle(start, start + segment.length(), new_style);
-                    }
-                    break;
-                default:
-                    break;
-            }
+        if (start == -1) {
+            return;
         }
+        String curr_style;
+        switch (typeIError) {
+            case "标点":
+                curr_style = "punc";
+                break;
+            case "字":
+                curr_style = "lett";
+                break;
+            case "词":
+                curr_style = "word";
+                break;
+            case "句":
+                curr_style = "sent";
+                break;
+            case "篇章及语用":
+                curr_style = "para";
+                break;
+            default:
+                curr_style = "";
+                break;
+        }
+
+        StyleSpans<Collection<String>> curr_stylespan
+                = MainScreen.getCurrEssay().getStyleSpans(start, start + segment.length());
+        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+
+        for (int i = 0; i < curr_stylespan.getSpanCount(); ++i) {
+            StyleSpan<Collection<String>> stylespan = curr_stylespan.getStyleSpan(i);
+            Collection<String> new_style = new ArrayList<>(stylespan.getStyle());
+            if (!new_style.contains(curr_style)) {
+                new_style.add(curr_style);
+            }
+            spansBuilder.add(new_style, stylespan.getLength());
+        }
+        MainScreen.getCurrEssay().setStyleSpans(start, spansBuilder.create());
     }
 }

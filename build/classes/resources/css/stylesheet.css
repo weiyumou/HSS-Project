@@ -30,7 +30,7 @@ and open the template in the editor.
 .sent {
     /*-fx-fill: violet;*/
     -fx-underline : true;
-    /*-fx-font-weight: bold;*/
+    -fx-font-weight: bold;
 }
 
 .para {
