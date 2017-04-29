@@ -77,6 +77,12 @@ public class ToolbarController {
               TextAreaController.saveToExcel();
         };
     }
+    
+    public static EventHandler<ActionEvent> getViewAuthorInfoEventHandler(){
+        return (ActionEvent event) -> {
+            AuthorInfoController.showAuthorInfoScreen(TextAreaController.getAuthorInfo());
+        };
+    }
 
     public static void adjustUserDisplay(String user, String userType) {
         MainScreen.setUsernameLabel(user);

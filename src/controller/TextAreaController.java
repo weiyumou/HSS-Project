@@ -163,6 +163,10 @@ public class TextAreaController {
         }
         return currentEssay.getTitle();
     }
+    
+    public static String getAuthorInfo(){
+        return currentEssay.getBackground();
+    }
 
     public static Sentence getCurrentSentence() {
         return currentSentence;

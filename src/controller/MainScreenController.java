@@ -35,6 +35,7 @@ public class MainScreenController {
     
     public static void applicationClose(){
         TreeViewController.saveCurrentTreeView();
+        AuthorInfoController.closeAuthorInfoScreen();
         currentStage.close();
     }
     

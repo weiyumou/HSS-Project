@@ -234,6 +234,7 @@ public class MainScreen extends Application {
         authorinfoButton = new Button("查看作者信息");
         authorinfoButton.setVisible(false);
         authorinfoButton.setDisable(true);
+        authorinfoButton.setOnAction(ToolbarController.getViewAuthorInfoEventHandler());
 
 
         final ToolBar toolBar = new ToolBar();
