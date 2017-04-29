@@ -16,20 +16,44 @@ import java.util.List;
 public class Essay implements Serializable{
     private String title;
     private String authorID;
+    private String background = "";
     private List<Paragraph> paragraphs;
     private int numOfSentences;
+    private List<Mark> marks;
 
     public Essay(List<String> lines) {
-        this.title = lines.get(0);
-        this.authorID = lines.get(1);
+        int index = 0;
+        while(index < lines.size() && lines.get(index).equals("\n"))
+            ++index;
+        
+        this.authorID = lines.get(index).substring(lines.get(index).indexOf(':') + 1);
+
+        ++index;
+        while(index < lines.size() && lines.get(index).isEmpty())
+            ++index;
+        
+        ++index;
+        while(index < lines.size() && !lines.get(index).isEmpty()){
+            this.background += lines.get(index) + "\n";
+            ++index;
+        }
+        
+        while(index < lines.size() && lines.get(index).isEmpty())
+            ++index;
+        
+        this.title = lines.get(index).substring(lines.get(index).indexOf(':') + 1);
+        index += 2;
         
         this.paragraphs = new ArrayList<>();
         numOfSentences = 0;
-        for(int i = 2; i != lines.size(); ++i){
-            Paragraph para = new Paragraph(lines.get(i), numOfSentences);
+        while(index < lines.size()){
+            Paragraph para = new Paragraph(lines.get(index), numOfSentences);
             this.paragraphs.add(para);
             numOfSentences += para.getSentences().size();
+            ++index;
         }
+        
+        this.marks = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -54,6 +78,14 @@ public class Essay implements Serializable{
 
     public void setParagraphs(List<Paragraph> paragraphs) {
         this.paragraphs = paragraphs;
+    }
+
+    public List<Mark> getMarks() {
+        return marks;
+    }
+
+    public void setMarks(List<Mark> marks) {
+        this.marks = marks;
     }
     
     @Override
@@ -119,6 +151,10 @@ public class Essay implements Serializable{
 
     public int getNumOfSentences() {
         return numOfSentences;
+    }
+
+    public String getBackground() {
+        return background;
     }
     
     

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
@@ -23,6 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import model.Essay;
+import model.Mark;
 import model.Sentence;
 import view.MainScreen;
 
@@ -35,6 +38,8 @@ public class TextAreaController {
     private static Essay currentEssay = null;
     private static int currentSentenceNo;
     private static Sentence currentSentence;
+    private static File essayFile;
+    private static File excelFile;
 
     //Textfield on focus
     public static ChangeListener<Boolean> getChangeListener() {
@@ -47,18 +52,23 @@ public class TextAreaController {
         };
     }
 
-    public static void readDatEssay(File file) {
+    public static void readDatEssay(File esfile, File exFile) {
         try (ObjectInputStream ois
-                = new ObjectInputStream(new FileInputStream(file))) {
+                = new ObjectInputStream(new FileInputStream(esfile))) {
             currentEssay = (Essay) ois.readObject();
+            TableViewController.load(currentEssay.getMarks());
             ToolbarController.adjustEssayDisplay(currentEssay.getTitle(),
                     currentEssay.getAuthorID());
             MainScreenController.enableViewAuthorInfo();
             MainScreenController.enableSaveButton();
             MainScreenController.enableSaveToExcelButton();
+            MainScreenController.enableSaveToXMLButton();
             currentSentenceNo = 1;
+            essayFile = esfile;
+            excelFile = exFile;
             displayEssay();
         } catch (IOException | ClassNotFoundException ex) {
+            System.out.println(ex);
         }
     }
 
@@ -72,8 +82,7 @@ public class TextAreaController {
                 lines.add(line);
             }
             essay = new Essay(lines);
-        } catch (IOException e) {
-        }
+        } catch (IOException e) {}
         return essay;
     }
 
@@ -166,12 +175,45 @@ public class TextAreaController {
 //            MainScreen.getCurrEssay().selectRange(start, start + segment.length());
 //        }
 //    }
+    
+    public static void saveEssay(){
+        try (ObjectOutputStream oos
+                = new ObjectOutputStream(new FileOutputStream(essayFile))) {
+            currentEssay.setMarks(TableViewController.getMarkList());
+            oos.writeObject(currentEssay);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public static void saveToExcel() {
+        currentEssay.setMarks(TableViewController.getMarkList());
+        final String[] colNames = MainScreen.getTableColNames();
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
+            w.print("\uFEFF");
+            int i;
+            for (i = 0; i != colNames.length - 1; ++i) {
+                w.print(colNames[i] + ",");
+            }
+            w.println(colNames[i]);
+            currentEssay.getMarks().forEach((item) -> {
+                w.println(item.toString());
+            });
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("提示");
+            alert.setHeaderText(null);
+            alert.setContentText("已保存");
+            alert.showAndWait();
+        } catch (IOException e) {
+//            e.printStackTrace();
+        }
+    }
 
-    public static void convertToDAT(List<File> files) {
-        for (File file : files) {
-            String datPath = file.getPath().replace(".txt", ".dat");
+    public static File convertToDAT(File txtFile) {
+//        for (File file : files) {
+            String datPath = txtFile.getPath().replace(".txt", ".dat");
             File datFile = new File(datPath);
-            Essay essay = readTextEssay(file);
+            Essay essay = readTextEssay(txtFile);
             try (ObjectOutputStream oos
                     = new ObjectOutputStream(new FileOutputStream(datFile))) {
                 oos.writeObject(essay);
@@ -181,14 +223,15 @@ public class TextAreaController {
                 alert.setHeaderText("转换出现错误");
                 alert.setContentText(ex.getMessage());
                 alert.showAndWait();
-                return;
+                return null;
             }
-        }
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("提示");
-        alert.setHeaderText(null);
-        alert.setContentText("转换成功");
-        alert.showAndWait();
+//        }
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("提示");
+//            alert.setHeaderText(null);
+//            alert.setContentText("转换成功");
+//            alert.showAndWait();
+            return datFile;
     }
     
 }

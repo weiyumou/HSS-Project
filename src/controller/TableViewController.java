@@ -5,14 +5,6 @@
  */
 package controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
@@ -45,8 +36,7 @@ public class TableViewController {
 
     private static ObservableList<Mark> tableData;
     private static final ObservableList<Integer> highlightRows = FXCollections.observableArrayList();
-    private static File dataFile;
-    private static File excelFile;
+    
 
     public static void loadData(Mark mark) {
         if (!tableData.contains(mark)) {
@@ -56,39 +46,50 @@ public class TableViewController {
             highlightSeg(mark.getError().getSegment(), mark.getError().getErrorTypes().get(0));
         }
     }
-
-    public static void load() {
+    
+    public static void load(List<Mark> marks) {
         tableData.clear();
-        try (ObjectInputStream ois
-                = new ObjectInputStream(new FileInputStream(dataFile))) {
-            while (true) {
-                tableData.add((Mark) ois.readObject());
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-            highlightMarks(TextAreaController.getCurrentSentence());
-            highlightErrors(TextAreaController.getCurrentSentence());
-        }
+        marks.forEach((mark) -> {
+            tableData.add(mark);
+        });
+    }
+    
+    public static List<Mark> getMarkList(){
+        List<Mark> markList = new ArrayList<>();
+        tableData.forEach((mark) -> {
+            markList.add(mark);
+        });
+        return markList;
     }
 
-    public static void dump() {
-        try (ObjectOutputStream oos
-                = new ObjectOutputStream(new FileOutputStream(dataFile))) {
-            for (int i = 0; i != tableData.size(); ++i) {
-                oos.writeObject(tableData.get(i));
-            }
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+//    public static void load() {
+//        tableData.clear();
+//        try (ObjectInputStream ois
+//                = new ObjectInputStream(new FileInputStream(dataFile))) {
+//            while (true) {
+//                tableData.add((Mark) ois.readObject());
+//            }
+//        } catch (IOException | ClassNotFoundException ex) {
+//            highlightMarks(TextAreaController.getCurrentSentence());
+//            highlightErrors(TextAreaController.getCurrentSentence());
+//        }
+//    }
 
-    public static void setDataFile(File dataFile) {
-        TableViewController.dataFile = dataFile;
-    }
+//    public static void dump() {
+//        try (ObjectOutputStream oos
+//                = new ObjectOutputStream(new FileOutputStream(dataFile))) {
+//            for (int i = 0; i != tableData.size(); ++i) {
+//                oos.writeObject(tableData.get(i));
+//            }
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//    }
 
-    public static void setExcelFile(File excelFile) {
 
-        TableViewController.excelFile = excelFile;
-    }
+//    public static void setExcelFile(File excelFile) {
+//        TableViewController.excelFile = excelFile;
+//    }
 
     public static void clearSelections() {
         MainScreen.getMarkTableView().getSelectionModel().clearSelection();
@@ -190,27 +191,27 @@ public class TableViewController {
         };
     }
 
-    public static void dumpToExcel() {
-        final String[] colNames = MainScreen.getTableColNames();
-        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
-            w.print("\uFEFF");
-            int i;
-            for (i = 0; i != colNames.length - 1; ++i) {
-                w.print(colNames[i] + ",");
-            }
-            w.println(colNames[i]);
-            for (Mark item : tableData) {
-                w.println(item.toString());
-            }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("提示");
-            alert.setHeaderText(null);
-            alert.setContentText("已保存");
-            alert.showAndWait();
-        } catch (IOException e) {
-//            e.printStackTrace();
-        }
-    }
+//    public static void dumpToExcel() {
+//        final String[] colNames = MainScreen.getTableColNames();
+//        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
+//            w.print("\uFEFF");
+//            int i;
+//            for (i = 0; i != colNames.length - 1; ++i) {
+//                w.print(colNames[i] + ",");
+//            }
+//            w.println(colNames[i]);
+//            for (Mark item : tableData) {
+//                w.println(item.toString());
+//            }
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("提示");
+//            alert.setHeaderText(null);
+//            alert.setContentText("已保存");
+//            alert.showAndWait();
+//        } catch (IOException e) {
+////            e.printStackTrace();
+//        }
+//    }
 
     public static void highlightErrors(Sentence currSentence) {
         for (int i = 0; i != tableData.size(); ++i) {

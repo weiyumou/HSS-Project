@@ -58,7 +58,6 @@ public class MainScreen extends Application {
     private static TreeView<String> errorTreeView;
     private static TableView<Mark> markTableView;
     private static TextArea prevEssay;
-//    private static TextArea currEssay;
     private static StyleClassedTextArea currEssay;
     
     private static TextArea nextEssay;
@@ -71,6 +70,7 @@ public class MainScreen extends Application {
     
     private static Button saveToExcelButton;
     private static Button saveButton;
+    private static Button saveToXMLButton;
     
     private static final String[] tableColNames = {
         "作者序号", "句子序号", "段落序号", 
@@ -191,7 +191,7 @@ public class MainScreen extends Application {
         openButton.setPrefWidth(80);
         openButton.setOnAction(ToolbarController.getOpenFileEventHandler());
 
-        saveButton = new Button("保存批注");
+        saveButton = new Button("保存标注");
         saveButton.setGraphic(new ImageView(
                 new Image(MainScreen.class.getResourceAsStream(
                 "/resources/img/glyphicons-447-floppy-save.png"))));
@@ -199,13 +199,22 @@ public class MainScreen extends Application {
         saveButton.setOnAction(ToolbarController.getSaveFileEventHandler());
         saveButton.setDisable(true);
 
-        saveToExcelButton = new Button("保存到Excel");
+        saveToExcelButton = new Button("输出标注至Excel");
         saveToExcelButton.setGraphic(new ImageView(
                 new Image(MainScreen.class.getResourceAsStream(
                 "/resources/img/glyphicons-447-floppy-save.png"))));
-        saveToExcelButton.setPrefWidth(120);
+        saveToExcelButton.setPrefWidth(150);
         saveToExcelButton.setDisable(true);
         saveToExcelButton.setOnAction(ToolbarController.getSaveToExcelEventHandler());
+        
+        saveToXMLButton = new Button("输出全文及标注");
+        saveToXMLButton.setGraphic(new ImageView(
+                new Image(MainScreen.class.getResourceAsStream(
+                "/resources/img/glyphicons-447-floppy-save.png"))));
+        saveToXMLButton.setPrefWidth(140);
+        saveToXMLButton.setDisable(true);
+        saveToXMLButton.setOnAction(ToolbarController.getSaveToExcelEventHandler());
+        
         
         final Button logoutButton = new Button();
         logoutButton.setGraphic(new ImageView(
@@ -226,12 +235,9 @@ public class MainScreen extends Application {
         authorinfoButton.setVisible(false);
         authorinfoButton.setDisable(true);
 
-        /*
-     * Extending the default ToolBar has the benefit, that you inherit useful features, like auto-collapse
-     * (try resizing the window to something small).
-         */
+
         final ToolBar toolBar = new ToolBar();
-        final HBox leftSection = new HBox(openButton, saveButton, saveToExcelButton);
+        final HBox leftSection = new HBox(openButton, saveButton, saveToExcelButton, saveToXMLButton);
         final HBox centerSection = new HBox(titleLabel, authorIDLabel, authorinfoButton);
         final HBox rightSection = new HBox(usernameLabel, usercategoryLabel, logoutButton);
 
@@ -275,7 +281,6 @@ public class MainScreen extends Application {
         }
 
         prevEssay = new TextArea();
-//        currEssay = new TextArea();
         currEssay = new StyleClassedTextArea();
         
         nextEssay = new TextArea();
@@ -341,9 +346,6 @@ public class MainScreen extends Application {
         return prevEssay;
     }
 
-//    public static TextArea getCurrEssay() {
-//        return currEssay;
-//    }
     public static StyleClassedTextArea getCurrEssay() {
         return currEssay;
     }
@@ -406,6 +408,10 @@ public class MainScreen extends Application {
 
     public static Button getSaveToExcelButton() {
         return saveToExcelButton;
+    }
+    
+    public static Button getSaveToXMLButton() {
+        return saveToXMLButton;
     }
 
     public static Button getSaveButton() {

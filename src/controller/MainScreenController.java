@@ -124,4 +124,9 @@ public class MainScreenController {
             MainScreen.getSaveToExcelButton().setDisable(false);
         }
     }
+    public static void enableSaveToXMLButton(){
+        if(isAdmin()){
+            MainScreen.getSaveToXMLButton().setDisable(false);
+        }
+    }
 }

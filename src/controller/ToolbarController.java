@@ -26,29 +26,31 @@ public class ToolbarController {
         return (ActionEvent event) -> {
             List<File> files = MainScreenController.showOpenFileChooser();
             if (files != null) {
-                File firstFile = files.get(0);
-                String fileName = firstFile.getName();
+                File currFile = files.get(0);
+                String fileName = currFile.getName();
                 String extension = "";
-                
                 int i = fileName.lastIndexOf('.');
                 if (i > 0) {
                     extension = fileName.substring(i+1);
                 }
                 
-                if(extension.equals("dat")){
-                    TextAreaController.readDatEssay(firstFile);
-                    String markPath = firstFile.getPath().replace(".dat", ".mak");
-                    String excelPath = firstFile.getPath().replace(".dat", ".csv");
-                    File markFile = new File(markPath);
-                    File excelFile = new File(excelPath);
-                    TableViewController.setDataFile(markFile);
-                    TableViewController.setExcelFile(excelFile);
-                    if(markFile.exists() && !markFile.isDirectory()){
-                        TableViewController.load();
-                    }
-                }else if(extension.equals("txt")){
-                    TextAreaController.convertToDAT(files);
-                }             
+                if(extension.equals("txt")){
+                    currFile = TextAreaController.convertToDAT(currFile);
+                }
+                
+                //                if(extension.equals("dat")){
+                String excelPath = currFile.getPath().replace(".dat", ".csv");
+                String xmlPath = currFile.getPath().replace(".dat", ".xml");
+
+                TextAreaController.readDatEssay(currFile, new File(excelPath));
+               
+                
+//                TableViewController.setDataFile(markFile);
+//                TableViewController.setExcelFile(excelFile);
+//                if(markFile.exists() && !markFile.isDirectory()){
+//                TableViewController.load(marks);
+//                }
+//                }            
             }
         };
     }
@@ -57,7 +59,8 @@ public class ToolbarController {
         return (ActionEvent event) -> {
 //            File file = MainScreenController.showSaveFileChooser();
 //            if (file != null) {
-                TableViewController.dump();
+//                TableViewController.dump();
+                TextAreaController.saveEssay();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("提示");
                 alert.setHeaderText(null);
@@ -70,7 +73,8 @@ public class ToolbarController {
     public static EventHandler<ActionEvent> getSaveToExcelEventHandler(){
         return (ActionEvent event) -> {
 //            File file = MainScreenController.showSaveFileChooser();
-            TableViewController.dumpToExcel();
+//            TableViewController.dumpToExcel();
+              TextAreaController.saveToExcel();
         };
     }
 
