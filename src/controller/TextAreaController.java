@@ -51,20 +51,21 @@ public class TextAreaController {
     private static File xmlFile;
 
     
-    public static File convertToDAT(File txtFile) {
-//        for (File file : files) {
-        String datPath = txtFile.getPath().replace(".txt", ".dat");
-        File datFile = new File(datPath);
-        Essay essay = readTextEssay(txtFile);
-        try (ObjectOutputStream oos
-                = new ObjectOutputStream(new FileOutputStream(datFile))) {
-            oos.writeObject(essay);
-        } catch (IOException ex) {
-            showAlert("提示", "转换出现错误", ex.getMessage(), Alert.AlertType.ERROR);
-            return null;
+    public static File convertToDAT(List<File> txtFiles) {
+        List<File> converted = new ArrayList<>();
+        for (File txtFile : txtFiles) {
+            String datPath = txtFile.getPath().replace(".txt", ".dat");
+            File datFile = new File(datPath);
+            Essay essay = readTextEssay(txtFile);
+            try (ObjectOutputStream oos
+                    = new ObjectOutputStream(new FileOutputStream(datFile))) {
+                oos.writeObject(essay);
+                converted.add(datFile);
+            } catch (IOException ex) {
+                showAlert("提示", "转换出现错误", ex.getMessage(), Alert.AlertType.ERROR);
+            }
         }
-//        }
-        return datFile;
+        return converted.isEmpty() ? null : converted.get(0);
     }
     
     private static Essay readTextEssay(File file) {
@@ -205,7 +206,7 @@ public class TextAreaController {
                     xMLStreamWriter.writeAttribute("全文序号", Integer.toString(stnc.getIdInEssay()));
                     xMLStreamWriter.writeAttribute("本段序号", Integer.toString(stnc.getIdInParagraph()));
                     
-                    String sentence = stnc.getContent().replace("\t\t", "");
+                    String sentence = stnc.getContent();
                     TreeMap<Integer, List<Error>> markMaps = new TreeMap<>();
                     for(Mark mark : markList){
                         if(mark.getSentence() == stnc){

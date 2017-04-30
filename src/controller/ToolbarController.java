@@ -31,24 +31,12 @@ public class ToolbarController {
                 if (i > 0) {
                     extension = fileName.substring(i+1);
                 }
-                
                 if(extension.equals("txt")){
-                    currFile = TextAreaController.convertToDAT(currFile);
+                    currFile = TextAreaController.convertToDAT(files);
                 }
-                
-                //                if(extension.equals("dat")){
                 String excelPath = currFile.getPath().replace(".dat", ".csv");
                 String xmlPath = currFile.getPath().replace(".dat", ".xml");
-
-                TextAreaController.readDatEssay(currFile, new File(excelPath), new File(xmlPath));
-               
-                
-//                TableViewController.setDataFile(markFile);
-//                TableViewController.setExcelFile(excelFile);
-//                if(markFile.exists() && !markFile.isDirectory()){
-//                TableViewController.load(marks);
-//                }
-//                }            
+                TextAreaController.readDatEssay(currFile, new File(excelPath), new File(xmlPath));        
             }
         };
     }
