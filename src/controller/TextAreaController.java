@@ -17,6 +17,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -205,25 +208,39 @@ public class TextAreaController {
         }
     }
     
-    private static void saveXMLMarks(Map.Entry<Integer, Error> curr, TreeMap<Integer, Error> markMaps, 
+    private static void saveXMLMarks(Map.Entry<Integer, List<Error>> curr, 
+            TreeMap<Integer, List<Error>> markMaps, 
             XMLStreamWriter xMLStreamWriter) throws XMLStreamException, IOException{
  
-        xMLStreamWriter.writeStartElement(curr.getValue().getLowestError());
-        int end = curr.getKey() + curr.getValue().getSegment().length();
-        int last_pos = curr.getKey();
-        
-        Map.Entry<Integer, Error> next = markMaps.higherEntry(curr.getKey());
-        while(next != null && next.getKey() < end){
-            xMLStreamWriter.writeCharacters(curr.getValue().getSegment()
-                    .substring(last_pos - curr.getKey(), next.getKey() - curr.getKey()));
-            saveXMLMarks(next, markMaps, xMLStreamWriter);
-            last_pos = next.getKey() + next.getValue().getSegment().length();
-            next = markMaps.higherEntry(next.getKey());
+        Error currError = curr.getValue().get(0);
+        xMLStreamWriter.writeStartElement(currError.getLowestError());
+        if(curr.getValue().size() > 1){
+            curr.getValue().remove(0);
+            Error nextError = curr.getValue().get(0);
+            saveXMLMarks(curr, markMaps, xMLStreamWriter);
+            
+            xMLStreamWriter.writeCharacters(currError.getSegment()
+                        .substring(nextError.getSegment().length()));
+            xMLStreamWriter.writeCharacters("|" + currError.getModification());
+            xMLStreamWriter.writeEndElement();
+        }else{
+            int end = curr.getKey() + currError.getSegment().length();
+            int last_pos = curr.getKey();
+
+            Map.Entry<Integer, List<Error>> next = markMaps.higherEntry(curr.getKey());
+            while(next != null && next.getKey() < end){
+                xMLStreamWriter.writeCharacters(currError.getSegment()
+                        .substring(last_pos - curr.getKey(), next.getKey() - curr.getKey()));
+                saveXMLMarks(next, markMaps, xMLStreamWriter);
+                last_pos = next.getKey() + next.getValue().get(0).getSegment().length();
+                next = markMaps.higherEntry(next.getKey());
+            }
+            xMLStreamWriter.writeCharacters(currError.getSegment()
+                        .substring(last_pos - curr.getKey(), end - curr.getKey()));
+            xMLStreamWriter.writeCharacters("|" + currError.getModification());
+            markMaps.remove(curr.getKey());
+            xMLStreamWriter.writeEndElement();
         }
-        xMLStreamWriter.writeCharacters(curr.getValue().getSegment()
-                    .substring(last_pos - curr.getKey(), end - curr.getKey()));
-        markMaps.remove(curr.getKey());
-        xMLStreamWriter.writeEndElement();
     }
     
     public static void saveToXML(){
@@ -255,20 +272,33 @@ public class TextAreaController {
                     xMLStreamWriter.writeAttribute("本段序号", Integer.toString(stnc.getIdInParagraph()));
                     
                     String sentence = stnc.getContent();
-                    TreeMap<Integer, Error> markMaps = new TreeMap<>();
+                    TreeMap<Integer, List<Error>> markMaps = new TreeMap<>();
                     for(Mark mark : markList){
                         if(mark.getSentence() == stnc){
                             int start = sentence.indexOf(mark.getError().getSegment());
-                            markMaps.put(start, mark.getError());
+                            if(markMaps.containsKey(start)){
+                                markMaps.get(start).add(mark.getError());
+                            }else{
+                                markMaps.put(start, new ArrayList<>(Arrays.asList(mark.getError())));
+                            }
                         }
                     }
-                    
+                    for (Map.Entry<Integer, List<Error>> entry : markMaps.entrySet()) {
+                        Collections.sort(entry.getValue(), (Error e1, Error e2) -> {
+                            if(e1.getSegment().length() > e2.getSegment().length()){
+                                return -1;
+                            }else if(e1.getSegment().length() < e2.getSegment().length()){
+                                return 1;
+                            }
+                            return 0;
+                        });
+                    }
                     int last_pos = 0;
                     while(!markMaps.isEmpty()){
-                        Map.Entry<Integer, Error> curr = markMaps.firstEntry();
+                        Map.Entry<Integer, List<Error>> curr = markMaps.firstEntry();
                         xMLStreamWriter.writeCharacters(sentence.substring(last_pos, curr.getKey()));
                         saveXMLMarks(curr, markMaps, xMLStreamWriter);
-                        last_pos = curr.getKey() + curr.getValue().getSegment().length();
+                        last_pos = curr.getKey() + curr.getValue().get(0).getSegment().length();
                     }
                     xMLStreamWriter.writeCharacters(sentence.substring(last_pos, sentence.length()));
                     xMLStreamWriter.writeEndElement();
