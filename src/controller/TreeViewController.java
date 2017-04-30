@@ -55,7 +55,6 @@ public class TreeViewController {
                 treeItem = constructTree(treeItem, xmlNode);
                 treeItemRoot.getChildren().add(treeItem);
             }
-
         }
 
         return treeItemRoot;
@@ -173,6 +172,7 @@ public class TreeViewController {
         TreeItem<String> treeItemRoot = errorTreeView.getRoot();
         String xmlString;
         try (StringWriter stringWriter = new StringWriter()) {
+            
             XMLOutputFactory xMLOutputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter xMLStreamWriter = xMLOutputFactory.createXMLStreamWriter(stringWriter);
             xMLStreamWriter.writeStartDocument();
@@ -182,12 +182,13 @@ public class TreeViewController {
             xMLStreamWriter.flush();
             xMLStreamWriter.close();
             xmlString = stringWriter.getBuffer().toString();
-
-            List<String> lines = Arrays.asList(xmlString);
-            Path file = Paths.get(PATH);
-            Files.write(file, lines, Charset.forName("UTF-8"));
-        } catch (XMLStreamException | IOException e) {
-            System.err.println(e);
+            
+            PrintWriter pwriter = new PrintWriter(new OutputStreamWriter(
+                    new FileOutputStream(PATH), "UTF-8"));
+            pwriter.println(xmlString);
+            pwriter.close();
+        } catch (XMLStreamException | IOException ex) {
+            System.err.println(ex);
         }
     }
 }

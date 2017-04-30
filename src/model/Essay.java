@@ -47,9 +47,11 @@ public class Essay implements Serializable{
         this.paragraphs = new ArrayList<>();
         numOfSentences = 0;
         while(index < lines.size()){
-            Paragraph para = new Paragraph(lines.get(index), numOfSentences);
-            this.paragraphs.add(para);
-            numOfSentences += para.getSentences().size();
+            if (!lines.get(index).isEmpty()) {
+                Paragraph para = new Paragraph(lines.get(index), numOfSentences);
+                this.paragraphs.add(para);
+                numOfSentences += para.getSentences().size();
+            }
             ++index;
         }
         

@@ -7,6 +7,7 @@ package controller;
 
 import java.io.File;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -37,6 +38,7 @@ public class MainScreenController {
         TreeViewController.saveCurrentTreeView();
         AuthorInfoController.closeAuthorInfoScreen();
         currentStage.close();
+        
     }
     
     public static void showMainScreen(String user, String userType){

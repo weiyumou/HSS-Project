@@ -19,7 +19,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,17 +50,39 @@ public class TextAreaController {
     private static File excelFile;
     private static File xmlFile;
 
-    //Textfield on focus
-    public static ChangeListener<Boolean> getChangeListener() {
-        return (ObservableValue<? extends Boolean> arg0,
-                Boolean oldPropertyValue, Boolean newPropertyValue) -> {
-            if (newPropertyValue) {
-                TreeViewController.clearSelections();
-                TableViewController.clearSelections();
-            }
-        };
+    
+    public static File convertToDAT(File txtFile) {
+//        for (File file : files) {
+        String datPath = txtFile.getPath().replace(".txt", ".dat");
+        File datFile = new File(datPath);
+        Essay essay = readTextEssay(txtFile);
+        try (ObjectOutputStream oos
+                = new ObjectOutputStream(new FileOutputStream(datFile))) {
+            oos.writeObject(essay);
+        } catch (IOException ex) {
+            showAlert("提示", "转换出现错误", ex.getMessage(), Alert.AlertType.ERROR);
+            return null;
+        }
+//        }
+        return datFile;
     }
-
+    
+    private static Essay readTextEssay(File file) {
+        List<String> lines = new ArrayList<>();
+        Essay essay = null;
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+            }
+            essay = new Essay(lines);
+        } catch (IOException ex) {
+            showAlert("提示", "打开出现错误", ex.getMessage(), Alert.AlertType.ERROR);
+        }
+        return essay;
+    }
+    
     public static void readDatEssay(File esfile, File exFile, File xlFile) {
         try (ObjectInputStream ois
                 = new ObjectInputStream(new FileInputStream(esfile))) {
@@ -79,103 +100,21 @@ public class TextAreaController {
             xmlFile = xlFile;
             displayEssay();
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println(ex);
+            showAlert("提示", "打开出现错误", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
-    private static Essay readTextEssay(File file) {
-        List<String> lines = new ArrayList<>();
-        Essay essay = null;
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-            }
-            essay = new Essay(lines);
-        } catch (IOException e) {}
-        return essay;
-    }
-
-//    public static EventHandler<ScrollEvent> getScrollEventHandler() {
-//        return (ScrollEvent event) -> {
-//            System.out.println("Scroll");
-//            if (event.getDeltaY() < 0) { //up
-//                scrollup();
-//            } else if (event.getDeltaY() > 0) { //down
-//                scrolldown();
-//            } 
-//        };
-//    }
-
-    public static EventHandler<KeyEvent> getScrollKeyEventHandler() {
-        return (KeyEvent event) -> {
-            if (event.getCode() == KeyCode.UP) {
-                scrolldown();
-            } else if (event.getCode() == KeyCode.DOWN) {
-                scrollup();
-            }
-        };
-    }
-
-    public static EventHandler<KeyEvent> getNoCopyKeyEventHandler() {
-        return (KeyEvent keyEvent) -> {
-            if (keyEvent.getCode() == KeyCode.C && keyEvent.isShortcutDown()) {
-                keyEvent.consume();
-                showAlert("提示", "错误", "无法复制内容", Alert.AlertType.ERROR);
-            }
-        };
-    }
-
-    private static void scrollup() {
-        if (currentSentenceNo < currentEssay.getNumOfSentences()) {
-            ++currentSentenceNo;
-            displayEssay();
-        }
-    }
-
-    private static void scrolldown() {
-        if (currentSentenceNo > 1) {
-            --currentSentenceNo;
-            displayEssay();
-        }
-    }
-
-    public static void scrollTo(int sentenceNo) {
-        currentSentenceNo = sentenceNo;
-        displayEssay();
-    }
-
+    
     private static void displayEssay() {
         MainScreen.getPrevEssay().setText(currentEssay.getSegment(1, currentSentenceNo));
         MainScreen.getPrevEssay().setScrollTop(Double.MAX_VALUE);
         currentSentence = currentEssay.getSingleSentence(currentSentenceNo);
-//        MainScreen.getCurrEssay().setText("\t" + currentSentence.toString());
         MainScreen.getCurrEssay().replaceText("\t" + currentSentence.toString());
-        
         MainScreen.getNextEssay().setText(currentEssay.getSegment(currentSentenceNo + 1));
         MainScreen.getNextEssay().setScrollTop(Double.MIN_VALUE);
-
         TableViewController.highlightMarks(currentSentence);
         TableViewController.highlightErrors(currentSentence);
     }
 
-    public static String getAuthorID() {
-        return currentEssay != null ? currentEssay.getAuthorID() : "";
-    }
-
-    public static String getEssayTitle() {
-        return currentEssay != null ? currentEssay.getTitle() : "";
-    }
-    
-    public static String getAuthorInfo(){
-        return currentEssay != null ? currentEssay.getBackground() : "";
-    }
-
-    public static Sentence getCurrentSentence() {
-        return currentSentence;
-    }
-    
     public static void saveEssay(){
         try (ObjectOutputStream oos
                 = new ObjectOutputStream(new FileOutputStream(essayFile))) {
@@ -184,7 +123,7 @@ public class TextAreaController {
             oos.close();
             showAlert("提示", "", "已保存", Alert.AlertType.INFORMATION);
         } catch (IOException ex) {
-            System.out.println(ex);
+            showAlert("提示", "保存出现错误", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
     
@@ -204,43 +143,39 @@ public class TextAreaController {
             w.close();
             showAlert("提示", "", "已保存", Alert.AlertType.INFORMATION);
         } catch (IOException ex) {
-            System.err.println(ex);
+            showAlert("提示", "保存出现错误", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
     
     private static void saveXMLMarks(Map.Entry<Integer, List<Error>> curr, 
             TreeMap<Integer, List<Error>> markMaps, 
             XMLStreamWriter xMLStreamWriter) throws XMLStreamException, IOException{
- 
-        Error currError = curr.getValue().get(0);
+        
+        Error currError = curr.getValue().remove(0);
         xMLStreamWriter.writeStartElement(currError.getLowestError());
-        if(curr.getValue().size() > 1){
-            curr.getValue().remove(0);
+        
+        int end = curr.getKey() + currError.getSegment().length();
+        int last_pos = curr.getKey();
+        
+        if(!curr.getValue().isEmpty()){
             Error nextError = curr.getValue().get(0);
             saveXMLMarks(curr, markMaps, xMLStreamWriter);
-            
-            xMLStreamWriter.writeCharacters(currError.getSegment()
-                        .substring(nextError.getSegment().length()));
-            xMLStreamWriter.writeCharacters("|" + currError.getModification());
-            xMLStreamWriter.writeEndElement();
-        }else{
-            int end = curr.getKey() + currError.getSegment().length();
-            int last_pos = curr.getKey();
-
-            Map.Entry<Integer, List<Error>> next = markMaps.higherEntry(curr.getKey());
-            while(next != null && next.getKey() < end){
-                xMLStreamWriter.writeCharacters(currError.getSegment()
-                        .substring(last_pos - curr.getKey(), next.getKey() - curr.getKey()));
-                saveXMLMarks(next, markMaps, xMLStreamWriter);
-                last_pos = next.getKey() + next.getValue().get(0).getSegment().length();
-                next = markMaps.higherEntry(next.getKey());
-            }
-            xMLStreamWriter.writeCharacters(currError.getSegment()
-                        .substring(last_pos - curr.getKey(), end - curr.getKey()));
-            xMLStreamWriter.writeCharacters("|" + currError.getModification());
-            markMaps.remove(curr.getKey());
-            xMLStreamWriter.writeEndElement();
+            last_pos += nextError.getSegment().length();
         }
+
+        Map.Entry<Integer, List<Error>> next = markMaps.higherEntry(curr.getKey());
+        while(next != null && next.getKey() < end){
+            xMLStreamWriter.writeCharacters(currError.getSegment()
+                    .substring(last_pos - curr.getKey(), next.getKey() - curr.getKey()));
+            last_pos = next.getKey() + next.getValue().get(0).getSegment().length();
+            saveXMLMarks(next, markMaps, xMLStreamWriter);
+            next = markMaps.higherEntry(next.getKey());
+        }
+        xMLStreamWriter.writeCharacters(currError.getSegment()
+                    .substring(last_pos - curr.getKey(), end - curr.getKey()));
+        xMLStreamWriter.writeCharacters("|" + currError.getModification());
+        markMaps.remove(curr.getKey());
+        xMLStreamWriter.writeEndElement();
     }
     
     public static void saveToXML(){
@@ -249,7 +184,6 @@ public class TextAreaController {
             XMLOutputFactory xMLOutputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter xMLStreamWriter = xMLOutputFactory.createXMLStreamWriter(stringWriter);
             xMLStreamWriter.writeStartDocument();
-            
             xMLStreamWriter.writeCharacters("\n");
             xMLStreamWriter.writeStartElement("作文");
             xMLStreamWriter.writeAttribute("序号", currentEssay.getAuthorID());
@@ -257,21 +191,21 @@ public class TextAreaController {
             xMLStreamWriter.writeStartElement("背景");
             xMLStreamWriter.writeCharacters("\n" + currentEssay.getBackground());
             xMLStreamWriter.writeEndElement();
-            
             xMLStreamWriter.writeCharacters("\n");
             xMLStreamWriter.writeStartElement("正文");
-            
-//            int para_count = 1;
+
+            int para_count = 1;
             for(Paragraph para : currentEssay.getParagraphs()){
-//                xMLStreamWriter.writeStartElement("自然段");
-//                xMLStreamWriter.writeAttribute("段落号", Integer.toString(para_count));
+                xMLStreamWriter.writeCharacters("\n");
+                xMLStreamWriter.writeStartElement("自然段");
+                xMLStreamWriter.writeAttribute("段落号", Integer.toString(para_count));
                 for(Sentence stnc : para.getSentences()){
                     xMLStreamWriter.writeCharacters("\n");
                     xMLStreamWriter.writeStartElement("句子");
                     xMLStreamWriter.writeAttribute("全文序号", Integer.toString(stnc.getIdInEssay()));
                     xMLStreamWriter.writeAttribute("本段序号", Integer.toString(stnc.getIdInParagraph()));
                     
-                    String sentence = stnc.getContent();
+                    String sentence = stnc.getContent().replace("\t\t", "");
                     TreeMap<Integer, List<Error>> markMaps = new TreeMap<>();
                     for(Mark mark : markList){
                         if(mark.getSentence() == stnc){
@@ -297,14 +231,15 @@ public class TextAreaController {
                     while(!markMaps.isEmpty()){
                         Map.Entry<Integer, List<Error>> curr = markMaps.firstEntry();
                         xMLStreamWriter.writeCharacters(sentence.substring(last_pos, curr.getKey()));
-                        saveXMLMarks(curr, markMaps, xMLStreamWriter);
                         last_pos = curr.getKey() + curr.getValue().get(0).getSegment().length();
+                        saveXMLMarks(curr, markMaps, xMLStreamWriter);
                     }
                     xMLStreamWriter.writeCharacters(sentence.substring(last_pos, sentence.length()));
                     xMLStreamWriter.writeEndElement();
                 }
-//                xMLStreamWriter.writeEndElement();
-//                ++para_count;
+                xMLStreamWriter.writeCharacters("\n");
+                xMLStreamWriter.writeEndElement();
+                ++para_count;
             }
             
             xMLStreamWriter.writeCharacters("\n");
@@ -323,10 +258,10 @@ public class TextAreaController {
             pwriter.close();
             showAlert("提示", "", "已保存", Alert.AlertType.INFORMATION);
         } catch (XMLStreamException | IOException ex) {
-            System.err.println(ex);
+            showAlert("提示", "保存出现错误", ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
-        
+
     private static void showAlert(String title, String header, 
             String text, Alert.AlertType type){
         Alert alert = new Alert(type);
@@ -336,25 +271,68 @@ public class TextAreaController {
         alert.showAndWait();
     }
 
-    public static File convertToDAT(File txtFile) {
-//        for (File file : files) {
-            String datPath = txtFile.getPath().replace(".txt", ".dat");
-            File datFile = new File(datPath);
-            Essay essay = readTextEssay(txtFile);
-            try (ObjectOutputStream oos
-                    = new ObjectOutputStream(new FileOutputStream(datFile))) {
-                oos.writeObject(essay);
-            } catch (IOException ex) {
-                showAlert("提示", "转换出现错误", ex.getMessage(), Alert.AlertType.ERROR);
-                return null;
-            }
-//        }
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("提示");
-//            alert.setHeaderText(null);
-//            alert.setContentText("转换成功");
-//            alert.showAndWait();
-            return datFile;
+    private static void scrollup() {
+        if (currentSentenceNo < currentEssay.getNumOfSentences()) {
+            ++currentSentenceNo;
+            displayEssay();
+        }
+    }
+
+    private static void scrolldown() {
+        if (currentSentenceNo > 1) {
+            --currentSentenceNo;
+            displayEssay();
+        }
+    }
+
+    public static void scrollTo(int sentenceNo) {
+        currentSentenceNo = sentenceNo;
+        displayEssay();
+    }
+
+    public static String getAuthorID() {
+        return currentEssay != null ? currentEssay.getAuthorID() : "";
+    }
+
+    public static String getEssayTitle() {
+        return currentEssay != null ? currentEssay.getTitle() : "";
     }
     
+    public static String getAuthorInfo(){
+        return currentEssay != null ? currentEssay.getBackground() : "";
+    }
+
+    public static Sentence getCurrentSentence() {
+        return currentSentence;
+    }
+    
+    //Textfield on focus
+    public static ChangeListener<Boolean> getChangeListener() {
+        return (ObservableValue<? extends Boolean> arg0,
+                Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (newPropertyValue) {
+                TreeViewController.clearSelections();
+                TableViewController.clearSelections();
+            }
+        };
+    }
+
+    public static EventHandler<KeyEvent> getScrollKeyEventHandler() {
+        return (KeyEvent event) -> {
+            if (event.getCode() == KeyCode.UP) {
+                scrolldown();
+            } else if (event.getCode() == KeyCode.DOWN) {
+                scrollup();
+            }
+        };
+    }
+    
+    public static EventHandler<KeyEvent> getNoCopyKeyEventHandler() {
+        return (KeyEvent keyEvent) -> {
+            if (keyEvent.getCode() == KeyCode.C && keyEvent.isShortcutDown()) {
+                keyEvent.consume();
+                showAlert("提示", "错误", "无法复制内容", Alert.AlertType.ERROR);
+            }
+        };
+    }
 }
