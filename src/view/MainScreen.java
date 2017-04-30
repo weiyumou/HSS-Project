@@ -213,7 +213,7 @@ public class MainScreen extends Application {
                 "/resources/img/glyphicons-447-floppy-save.png"))));
         saveToXMLButton.setPrefWidth(140);
         saveToXMLButton.setDisable(true);
-        saveToXMLButton.setOnAction(ToolbarController.getSaveToExcelEventHandler());
+        saveToXMLButton.setOnAction(ToolbarController.getSaveToXMLEventHandler());
         
         
         final Button logoutButton = new Button();
@@ -307,7 +307,7 @@ public class MainScreen extends Application {
         nextEssay.setWrapText(true);
         currEssay.setWrapText(true);
 
-        currEssay.setOnScroll(TextAreaController.getScrollEventHandler());
+//        currEssay.setOnScroll(TextAreaController.getScrollEventHandler());
         currEssay.setOnKeyReleased(TextAreaController.getScrollKeyEventHandler());
 
         currEssay.focusedProperty().addListener(TextAreaController.getChangeListener());

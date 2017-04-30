@@ -67,10 +67,6 @@ public class TreeViewController {
 
         try {
             File inputFile = new File(PATH);
-//            InputStream ins = TreeViewController.class.getResourceAsStream(PATH);
-//            System.out.println(TreeViewController.class.getResource(PATH).toURI());
-//            File inputFile = File.;
-
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
@@ -188,23 +184,10 @@ public class TreeViewController {
             xmlString = stringWriter.getBuffer().toString();
 
             List<String> lines = Arrays.asList(xmlString);
-//            File file = new File(TreeViewController.class.getResourceAsStream(PATH).);
-
-//            System.out.println(file.getPath());
-//            PrintWriter writer
-//                    = new PrintWriter(
-//                            new File(PATH));
-//            PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)));
-//            for (String line : lines) {
-//                writer.println(line);
-//            }
             Path file = Paths.get(PATH);
-
-//            Path path = Paths.get(PATH);
-//            
             Files.write(file, lines, Charset.forName("UTF-8"));
         } catch (XMLStreamException | IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 }

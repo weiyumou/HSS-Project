@@ -83,6 +83,7 @@ public class Mark implements Serializable {
     public SimpleStringProperty remarkProperty() {
         return new SimpleStringProperty(error.getRemark());
     }
+    
 
     public Sentence getSentence() {
         return sentence;

@@ -13,7 +13,7 @@ import view.AuthorInfoWindow;
  * @author weiyumou
  */
 public class AuthorInfoController {
-    private static Stage stage;
+    private static Stage stage = null;
 
     public static void showAuthorInfoScreen(String authorInfo) {
         stage = new Stage();
@@ -25,7 +25,9 @@ public class AuthorInfoController {
     }
     
     public static void closeAuthorInfoScreen(){
-        stage.close();
+        if (stage != null && stage.isShowing()) {
+            stage.close();
+        }
     }
     
     

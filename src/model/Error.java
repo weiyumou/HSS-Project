@@ -30,6 +30,10 @@ public class Error implements Serializable{
     public List<String> getErrorTypes() {
         return errorTypes;
     }
+    
+    public String getLowestError(){
+        return errorTypes.get(errorTypes.size() - 1);
+    }
 
     public void setErrorTypes(List<String> errorTypes) {
         this.errorTypes = errorTypes;
@@ -58,33 +62,42 @@ public class Error implements Serializable{
     public void setModification(String modification) {
         this.modification = modification;
     }
-    
-    
-    
-    @Override
-    public boolean equals(Object obj){
-        if (obj == null) {
-            return false;
-        }
-        if (!Error.class.isAssignableFrom(obj.getClass())) {
-            return false;
-        }
-        final Error other = (Error) obj;
-        
-        if ((this.getSegment() == null) ? (other.getSegment() != null) 
-            : !this.getSegment().equals(other.getSegment())) {
-            return false;
-        }
-        return !((this.getErrorTypes() == null) ? (other.getErrorTypes() != null) 
-                : !this.getErrorTypes().equals(other.getErrorTypes()));
-    }
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 89 * hash + Objects.hashCode(this.errorTypes);
         hash = 89 * hash + Objects.hashCode(this.segment);
+        hash = 89 * hash + Objects.hashCode(this.modification);
+        hash = 89 * hash + Objects.hashCode(this.remark);
         return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Error other = (Error) obj;
+        if (!Objects.equals(this.segment, other.segment)) {
+            return false;
+        }
+        if (!Objects.equals(this.modification, other.modification)) {
+            return false;
+        }
+        if (!Objects.equals(this.remark, other.remark)) {
+            return false;
+        }
+        if (!Objects.equals(this.errorTypes, other.errorTypes)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

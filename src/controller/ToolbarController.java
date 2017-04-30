@@ -42,7 +42,7 @@ public class ToolbarController {
                 String excelPath = currFile.getPath().replace(".dat", ".csv");
                 String xmlPath = currFile.getPath().replace(".dat", ".xml");
 
-                TextAreaController.readDatEssay(currFile, new File(excelPath));
+                TextAreaController.readDatEssay(currFile, new File(excelPath), new File(xmlPath));
                
                 
 //                TableViewController.setDataFile(markFile);
@@ -57,24 +57,19 @@ public class ToolbarController {
 
     public static EventHandler<ActionEvent> getSaveFileEventHandler() {
         return (ActionEvent event) -> {
-//            File file = MainScreenController.showSaveFileChooser();
-//            if (file != null) {
-//                TableViewController.dump();
-                TextAreaController.saveEssay();
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("提示");
-                alert.setHeaderText(null);
-                alert.setContentText("已保存");
-                alert.showAndWait();
-//            }
+            TextAreaController.saveEssay();
         };
     }
     
     public static EventHandler<ActionEvent> getSaveToExcelEventHandler(){
         return (ActionEvent event) -> {
-//            File file = MainScreenController.showSaveFileChooser();
-//            TableViewController.dumpToExcel();
               TextAreaController.saveToExcel();
+        };
+    }
+    
+    public static EventHandler<ActionEvent> getSaveToXMLEventHandler(){
+        return (ActionEvent event) -> {
+            TextAreaController.saveToXML();
         };
     }
     
