@@ -131,7 +131,8 @@ public class TextAreaController {
     public static void saveToExcel() {
         currentEssay.setMarks(TableViewController.getMarkList());
         final String[] colNames = MainScreen.getTableColNames();
-        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(
+                new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
             w.print("\uFEFF");
             int i;
             for (i = 0; i != colNames.length - 1; ++i) {

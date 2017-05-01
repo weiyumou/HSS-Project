@@ -15,6 +15,7 @@ import java.util.Objects;
  */
 public class Error implements Serializable{
 
+    private static final int NO_ERROR = 3;
     private List<String> errorTypes;
     private String segment;
     private String modification;
@@ -60,7 +61,7 @@ public class Error implements Serializable{
     }
 
     public void setModification(String modification) {
-        this.modification = modification;
+        this.modification = modification.replace("\n", "");
     }
 
     @Override
@@ -103,11 +104,16 @@ public class Error implements Serializable{
     @Override
     public String toString() {
         String res = "";
+        int count = 0;
         for(String error : errorTypes){
             res += error + ",";
+            ++count;
         }
-        return res + segment + "," + modification + "," + remark;
+        while(count < NO_ERROR){
+            res += ",";
+            ++count;
+        }
+        String ret = segment + "," + res + modification + "," + remark;
+        return ret;
     }
-    
-   
 }

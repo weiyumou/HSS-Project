@@ -7,7 +7,6 @@ package controller;
 
 import java.io.File;
 import java.util.List;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;

@@ -62,35 +62,6 @@ public class TableViewController {
         return markList;
     }
 
-//    public static void load() {
-//        tableData.clear();
-//        try (ObjectInputStream ois
-//                = new ObjectInputStream(new FileInputStream(dataFile))) {
-//            while (true) {
-//                tableData.add((Mark) ois.readObject());
-//            }
-//        } catch (IOException | ClassNotFoundException ex) {
-//            highlightMarks(TextAreaController.getCurrentSentence());
-//            highlightErrors(TextAreaController.getCurrentSentence());
-//        }
-//    }
-
-//    public static void dump() {
-//        try (ObjectOutputStream oos
-//                = new ObjectOutputStream(new FileOutputStream(dataFile))) {
-//            for (int i = 0; i != tableData.size(); ++i) {
-//                oos.writeObject(tableData.get(i));
-//            }
-//        } catch (IOException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-
-
-//    public static void setExcelFile(File excelFile) {
-//        TableViewController.excelFile = excelFile;
-//    }
-
     public static void clearSelections() {
         MainScreen.getMarkTableView().getSelectionModel().clearSelection();
     }
@@ -190,28 +161,6 @@ public class TableViewController {
             return row;
         };
     }
-
-//    public static void dumpToExcel() {
-//        final String[] colNames = MainScreen.getTableColNames();
-//        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(excelFile.getPath()), "UTF-8"));) {
-//            w.print("\uFEFF");
-//            int i;
-//            for (i = 0; i != colNames.length - 1; ++i) {
-//                w.print(colNames[i] + ",");
-//            }
-//            w.println(colNames[i]);
-//            for (Mark item : tableData) {
-//                w.println(item.toString());
-//            }
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("提示");
-//            alert.setHeaderText(null);
-//            alert.setContentText("已保存");
-//            alert.showAndWait();
-//        } catch (IOException e) {
-////            e.printStackTrace();
-//        }
-//    }
 
     public static void highlightErrors(Sentence currSentence) {
         for (int i = 0; i != tableData.size(); ++i) {
