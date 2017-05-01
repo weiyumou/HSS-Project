@@ -53,7 +53,7 @@ public class Error implements Serializable{
     }
 
     public void setRemark(String remark) {
-        this.remark = remark;
+        this.remark = remark.replace("\n", "");
     }
 
     public String getModification() {
