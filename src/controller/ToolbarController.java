@@ -65,14 +65,6 @@ public class ToolbarController {
         };
     }
 
-    public static void adjustUserDisplay(String user, String userType) {
-        MainScreen.setUsernameLabel(user);
-        MainScreen.setUsercategoryLabel(userType);
-        if (userType.equals("管理员")) {
-            MainScreen.getAuthorinfoButton().setVisible(true);
-        }
-    }
-
     public static void adjustEssayDisplay(String title, String author) {
         resetEssayDisplay();
         MainScreen.setEssayTitle(title);

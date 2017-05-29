@@ -28,7 +28,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -80,7 +79,7 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        MainScreenController.login();
+        MainScreenController.showMainScreen();
     }
 
     @Override
@@ -214,52 +213,44 @@ public class MainScreen extends Application {
         saveToXMLButton.setPrefWidth(140);
         saveToXMLButton.setDisable(true);
         saveToXMLButton.setOnAction(ToolbarController.getSaveToXMLEventHandler());
-        
-        
-        final Button logoutButton = new Button();
-        logoutButton.setGraphic(new ImageView(
-                new Image(MainScreen.class.getResourceAsStream(
-                "/resources/img/glyphicons-388-log-out.png"))));
-        logoutButton.setOnAction(MainScreenController.getLogoutEventHandler());
-        logoutButton.setTooltip(new Tooltip("注销"));
-
-        usernameLabel = new Label("当前用户: ");
-        usercategoryLabel = new Label("类别: ");
 
         titleLabel = new Label("当前文章: ");
         authorIDLabel = new Label("序号: ");
-        authorIDLabel.setVisible(false);
         ToolbarController.resetEssayDisplay();
 
         authorinfoButton = new Button("查看文章背景");
-        authorinfoButton.setVisible(false);
+        authorinfoButton.setGraphic(new ImageView(
+                new Image(MainScreen.class.getResourceAsStream(
+                "/resources/img/glyphicons-196-circle-info.png"))));
         authorinfoButton.setDisable(true);
+        authorinfoButton.setPrefWidth(140);
         authorinfoButton.setOnAction(ToolbarController.getViewAuthorInfoEventHandler());
 
 
+
+        
         final ToolBar toolBar = new ToolBar();
         final HBox leftSection = new HBox(openButton, saveButton, saveToExcelButton, saveToXMLButton);
         final HBox centerSection = new HBox(titleLabel, authorIDLabel, authorinfoButton);
-        final HBox rightSection = new HBox(usernameLabel, usercategoryLabel, logoutButton);
-
+//        final HBox rightSection = new HBox(imv);
 
         /* Center all sections and always grow them. Has the effect known as JUSTIFY. */
         HBox.setHgrow(leftSection, Priority.ALWAYS);
         HBox.setHgrow(centerSection, Priority.ALWAYS);
-        HBox.setHgrow(rightSection, Priority.ALWAYS);
+//        HBox.setHgrow(rightSection, Priority.ALWAYS);
 
         leftSection.setAlignment(Pos.CENTER_LEFT);
-        centerSection.setAlignment(Pos.CENTER);
-        rightSection.setAlignment(Pos.CENTER_RIGHT);
+        centerSection.setAlignment(Pos.CENTER_RIGHT);
+//        rightSection.setAlignment(Pos.CENTER_RIGHT);
 
         /* It might be harder to propagate some properties: */
         final int spacing = 8;
         toolBar.setPadding(new Insets(0, spacing, 0, spacing));
         leftSection.setSpacing(spacing);
         centerSection.setSpacing(spacing);
-        rightSection.setSpacing(spacing);
+//        rightSection.setSpacing(spacing);
 
-        toolBar.getItems().addAll(leftSection, centerSection, rightSection);
+        toolBar.getItems().addAll(leftSection, centerSection);
         toolBar.setPrefHeight(40);
 
         return toolBar;
@@ -307,7 +298,6 @@ public class MainScreen extends Application {
         nextEssay.setWrapText(true);
         currEssay.setWrapText(true);
 
-//        currEssay.setOnScroll(TextAreaController.getScrollEventHandler());
         currEssay.setOnKeyReleased(TextAreaController.getScrollKeyEventHandler());
 
         currEssay.focusedProperty().addListener(TextAreaController.getChangeListener());
