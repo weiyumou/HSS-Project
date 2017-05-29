@@ -74,8 +74,8 @@ public class MainScreen extends Application {
     
     private static final String[] tableColNames = {
         "作者序号", "句子序号", "段落序号", 
-        "句子", "错误片段", "错误类型(I)", "错误类型(II)", 
-        "错误类型(III)", "修改", "备注"
+        "句子", "偏误片段", "偏误类型(I)", "偏误类型(II)", 
+        "偏误类型(III)", "修改", "备注"
     };
 
     @Override
@@ -199,11 +199,11 @@ public class MainScreen extends Application {
         saveButton.setOnAction(ToolbarController.getSaveFileEventHandler());
         saveButton.setDisable(true);
 
-        saveToExcelButton = new Button("输出标注至Excel");
+        saveToExcelButton = new Button("输出标注");
         saveToExcelButton.setGraphic(new ImageView(
                 new Image(MainScreen.class.getResourceAsStream(
                 "/resources/img/glyphicons-447-floppy-save.png"))));
-        saveToExcelButton.setPrefWidth(150);
+        saveToExcelButton.setPrefWidth(100);
         saveToExcelButton.setDisable(true);
         saveToExcelButton.setOnAction(ToolbarController.getSaveToExcelEventHandler());
         
@@ -227,11 +227,11 @@ public class MainScreen extends Application {
         usercategoryLabel = new Label("类别: ");
 
         titleLabel = new Label("当前文章: ");
-        authorIDLabel = new Label("作者序号: ");
+        authorIDLabel = new Label("序号: ");
         authorIDLabel.setVisible(false);
         ToolbarController.resetEssayDisplay();
 
-        authorinfoButton = new Button("查看作者信息");
+        authorinfoButton = new Button("查看文章背景");
         authorinfoButton.setVisible(false);
         authorinfoButton.setDisable(true);
         authorinfoButton.setOnAction(ToolbarController.getViewAuthorInfoEventHandler());

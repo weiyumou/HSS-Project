@@ -83,6 +83,6 @@ public class ToolbarController {
         MainScreen.clearEssayTitle();
         MainScreen.clearAuthorID();
         MainScreen.setEssayTitle("当前文章: ");
-        MainScreen.setAuthorID("作者序号: ");
+        MainScreen.setAuthorID("序号: ");
     }
 }
