@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import view.MainScreen;
 
 /**
@@ -36,14 +37,18 @@ public class MainScreenController {
     public static void applicationClose(){
         TreeViewController.saveCurrentTreeView();
         AuthorInfoController.closeAuthorInfoScreen();
-        currentStage.close();
-        
+        if (currentStage != null && currentStage.isShowing()) {
+            currentStage.close();
+        }
     }
     
     public static void showMainScreen(String user, String userType){
         MainScreenController.user = user;
         MainScreenController.userType = userType;
         currentStage = new Stage();
+        currentStage.setOnCloseRequest((WindowEvent event) -> {
+            applicationClose();
+        });
         
         FileChooser openFileChooser = new FileChooser();
         FileChooser saveFileChooser = new FileChooser();
