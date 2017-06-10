@@ -23,13 +23,13 @@ public class Essay implements Serializable{
 
     public Essay(List<String> lines) {
         int index = 0;
-        while(index < lines.size() && lines.get(index).equals("\n"))
+        while(index < lines.size() && lines.get(index).isEmpty())
             ++index;
         
         int splitIndex = lines.get(index).indexOf(':');
         splitIndex = splitIndex == -1 ? lines.get(index).indexOf('：') : splitIndex;
         
-        this.authorID = lines.get(index).substring(splitIndex + 1);
+        this.authorID = lines.get(index).substring(splitIndex + 1).trim();
 
         ++index;
         while(index < lines.size() && lines.get(index).isEmpty())
@@ -37,7 +37,7 @@ public class Essay implements Serializable{
         
         ++index;
         while(index < lines.size() && !lines.get(index).isEmpty()){
-            this.background += lines.get(index) + "\n";
+            this.background += lines.get(index).trim() + "\n";
             ++index;
         }
         
@@ -46,9 +46,13 @@ public class Essay implements Serializable{
         
         splitIndex = lines.get(index).indexOf(':');
         splitIndex = splitIndex == -1 ? lines.get(index).indexOf('：') : splitIndex;
-        this.title = lines.get(index).substring(splitIndex + 1);
-        index += 2;
+        this.title = lines.get(index).substring(splitIndex + 1).trim();
         
+        ++index;
+        while(index < lines.size() && lines.get(index).isEmpty())
+            ++index;
+        
+        ++index;
         this.paragraphs = new ArrayList<>();
         numOfSentences = 0;
         while(index < lines.size()){
