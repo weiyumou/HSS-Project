@@ -7,7 +7,6 @@ package controller;
 
 import java.io.File;
 import java.util.List;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
