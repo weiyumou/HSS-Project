@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -88,6 +89,7 @@ public class TreeViewController {
                     TreeItem<String> currNode = MainScreen.getErrorTreeView()
                             .getSelectionModel().getSelectedItem();
                     String selectedText = MainScreen.getCurrEssay().getSelectedText();
+                    IndexRange selectedRange = MainScreen.getCurrEssay().getSelection();
 
                     if (!(currNode.getChildren().size() > 1
                             || currNode.getValue().equals(TRIGGER_STRING)
@@ -103,7 +105,8 @@ public class TreeViewController {
                         boolean isItemSelected = TableViewController.updateSelectedItem(errorTypes);
 
                         if (!isItemSelected) {
-                            Error error = new Error(errorTypes, selectedText, "", "");
+                            Error error = new Error(errorTypes, selectedText, 
+                                    "", "", selectedRange);
                             Mark mark = new Mark(TextAreaController.getAuthorID(),
                                     TextAreaController.getCurrentSentence(), error);
                             TableViewController.loadData(mark);

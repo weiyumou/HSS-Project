@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import javafx.scene.control.IndexRange;
 
 /**
  *
@@ -20,12 +21,17 @@ public class Error implements Serializable{
     private String segment;
     private String modification;
     private String remark;
+    private final int selectionStart;
+    private final int selectionEnd;
 
-    public Error(List<String> errorTypes, String segment, String modification, String remark) {
+    public Error(List<String> errorTypes, String segment, String modification, 
+            String remark, IndexRange selectedRange) {
         this.errorTypes = errorTypes;
         this.segment = segment;
         this.remark = remark;
         this.modification = modification;
+        this.selectionStart = selectedRange.getStart();
+        this.selectionEnd = selectedRange.getEnd();
     }
 
     public List<String> getErrorTypes() {
@@ -64,6 +70,14 @@ public class Error implements Serializable{
         this.modification = modification.replace("\n", "");
     }
 
+    public int getSelectionStart() {
+        return this.selectionStart;
+    }
+
+    public int getSelectionEnd() {
+        return this.selectionEnd;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -71,6 +85,8 @@ public class Error implements Serializable{
         hash = 89 * hash + Objects.hashCode(this.segment);
         hash = 89 * hash + Objects.hashCode(this.modification);
         hash = 89 * hash + Objects.hashCode(this.remark);
+        hash = 89 * hash + Objects.hashCode(this.selectionStart);
+        hash = 89 * hash + Objects.hashCode(this.selectionEnd);
         return hash;
     }
 
@@ -96,6 +112,12 @@ public class Error implements Serializable{
             return false;
         }
         if (!Objects.equals(this.errorTypes, other.errorTypes)) {
+            return false;
+        }
+        if (!Objects.equals(this.selectionStart, other.selectionStart)) {
+            return false;
+        }
+        if (!Objects.equals(this.selectionEnd, other.selectionEnd)) {
             return false;
         }
         return true;

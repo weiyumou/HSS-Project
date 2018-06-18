@@ -43,7 +43,9 @@ public class TableViewController {
             tableData.add(mark);
             highlightRows.add(tableData.size() - 1);
             MainScreen.getMarkTableView().scrollTo(Integer.MAX_VALUE);
-            highlightSeg(mark.getError().getSegment(), mark.getError().getErrorTypes().get(0));
+            highlightSeg(mark.getError().getSelectionStart(), 
+                    mark.getError().getSelectionEnd(),
+                    mark.getError().getErrorTypes().get(0));
         }
     }
     
@@ -90,7 +92,9 @@ public class TableViewController {
         }
         Mark currMark = tableData.get(selectedIndex);
         currMark.getError().setErrorTypes(errorTypes);
-        highlightSeg(currMark.getError().getSegment(), currMark.getError().getErrorTypes().get(0));
+        highlightSeg(currMark.getError().getSelectionStart(), 
+                currMark.getError().getSelectionEnd(),
+                currMark.getError().getErrorTypes().get(0));
         refreshTableView();
         return true;
     }
@@ -108,7 +112,8 @@ public class TableViewController {
                 Mark currMark = tableData.get(index);
                 tableData.remove(index);
                 highlightRows.remove((Integer) index);
-                unhighlightSeg(currMark.getError().getSegment());
+                unhighlightSeg(currMark.getError().getSelectionStart(), 
+                        currMark.getError().getSelectionEnd());
                 TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
                 refreshTableView();
             }
@@ -137,9 +142,9 @@ public class TableViewController {
                         if (row.getIndex() < tableData.size()) {
                             Mark currMark = tableData.get(row.getIndex());
                             TextAreaController.scrollTo(currMark.getSentence().getIdInEssay());
-                            highlightText(tableData.get(row.getIndex()).getError().getSegment());
+                            highlightText(tableData.get(row.getIndex()).getError().getSelectionStart(), 
+                                    tableData.get(row.getIndex()).getError().getSelectionEnd());
                         }
-
                     }
                 }
             });
@@ -165,33 +170,24 @@ public class TableViewController {
     public static void highlightErrors(Sentence currSentence) {
         for (int i = 0; i != tableData.size(); ++i) {
             if (tableData.get(i).getSentence().equals(currSentence)) {
-                highlightSeg(tableData.get(i).getError().getSegment(),
+                highlightSeg(tableData.get(i).getError().getSelectionStart(),
+                        tableData.get(i).getError().getSelectionEnd(),
                         tableData.get(i).getError().getErrorTypes().get(0));
             }
         }
     }
 
-    private static void highlightText(String segment) {
+    private static void highlightText(int start, int end) {
         MainScreen.getCurrEssay().selectRange(0, 0);
-        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
-        if (start != -1) {
-            MainScreen.getCurrEssay().selectRange(start, start + segment.length());
-        }
+        MainScreen.getCurrEssay().selectRange(start, end);
     }
 
-    private static void unhighlightSeg(String segment) {
+    private static void unhighlightSeg(int start, int end) {
         MainScreen.getCurrEssay().selectRange(0, 0);
-        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
-        if (start != -1) {
-            MainScreen.getCurrEssay().clearStyle(start, start + segment.length());
-        }
+        MainScreen.getCurrEssay().clearStyle(start, end);
     }
 
-    private static void highlightSeg(String segment, String typeIError) {
-        int start = MainScreen.getCurrEssay().getText().indexOf(segment);
-        if (start == -1) {
-            return;
-        }
+    private static void highlightSeg(int start, int end, String typeIError) {
         String curr_style;
         switch (typeIError) {
             case "标点":
@@ -215,7 +211,7 @@ public class TableViewController {
         }
 
         StyleSpans<Collection<String>> curr_stylespan
-                = MainScreen.getCurrEssay().getStyleSpans(start, start + segment.length());
+                = MainScreen.getCurrEssay().getStyleSpans(start, end);
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 
         for (int i = 0; i < curr_stylespan.getSpanCount(); ++i) {
